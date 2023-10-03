@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using CodeMonkey.Utils;
 
 public class UI_Inventory : MonoBehaviour
 {
@@ -11,17 +10,23 @@ public class UI_Inventory : MonoBehaviour
     private Transform itemSlotContainer;
     private Transform itemSlotTemplate;
 
+    private Player1Controller playerController;
+
     private void Awake()
     {
         itemSlotContainer = transform.Find("ItemSlotContainer");
         itemSlotTemplate = itemSlotContainer.Find("ItemSlotTemplate");
     }
 
-    public void SetInventory(Inventory inventory)
+    public void SetInventory(Inventory inventory, Player1Controller playerController)
     {
         this.inventory = inventory;
+        this.playerController = playerController; // Inisialisasi referensi ke Player1Controller
 
+        // Menambahkan event handler untuk event OnItemListChanged dari Inventory
         inventory.OnItemListChanged += Inventory_OnItemListChanged;
+
+        // Memuat ulang tampilan inventori
         RefreshInventoryItems();
     }
 
@@ -40,16 +45,13 @@ public class UI_Inventory : MonoBehaviour
         int x = 0;
         int y = 0;
         float itemSlotCellSize = 60f;
+        int selectedItemIndex = playerController.GetSelectedItemIndex(); // Ambil indeks item yang dipilih dari Player1Controller
+        int childIndex = 0; // Indeks untuk item slot
 
         foreach (Item item in inventory.GetItemList())
         {
             RectTransform itemSlotTransform = Instantiate(itemSlotTemplate, itemSlotContainer).GetComponent<RectTransform>();
             itemSlotTransform.gameObject.SetActive(true);
-
-            itemSlotTransform.GetComponent<Button_UI>().ClickFunc = () =>
-            {
-                inventory.UseItem(item);
-            };
 
             itemSlotTransform.anchoredPosition = new Vector2(x * itemSlotCellSize, y * itemSlotCellSize);
             Image image = itemSlotTransform.Find("image").GetComponent<Image>();
@@ -65,6 +67,10 @@ public class UI_Inventory : MonoBehaviour
                 uiText.SetText("");
             }
 
+            Image selectImage = itemSlotTransform.Find("select").GetComponent<Image>();
+            selectImage.enabled = childIndex == selectedItemIndex; // Aktifkan gambar select hanya pada item yang dipilih
+            childIndex++;
+
             x++;
             if (x > 3)
             {
@@ -74,6 +80,16 @@ public class UI_Inventory : MonoBehaviour
         }
     }
 
-  
+    public void SetSelectedItemHighlight(int selectedIndex)
+    {
+        int childIndex = 0;
+        foreach (Transform child in itemSlotContainer)
+        {
+            if (child == itemSlotTemplate) continue;
 
+            Image selectImage = child.Find("select").GetComponent<Image>();
+            selectImage.enabled = childIndex == selectedIndex; // Aktifkan gambar select hanya pada item yang dipilih
+            childIndex++;
+        }
+    }
 }

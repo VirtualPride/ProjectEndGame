@@ -6,6 +6,7 @@ using UnityEngine;
 [Serializable]
 public class Item
 {
+    public bool isSelected = false;
     public enum ItemType
     {
         Kunci,

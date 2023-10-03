@@ -15,6 +15,10 @@ public class Inventory
         itemList = new List<Item>();
         AddItem(new Item { itemType = Item.ItemType.Kunci, amount = 1 });
         AddItem(new Item { itemType = Item.ItemType.Buku, amount = 1 });
+        AddItem(new Item { itemType = Item.ItemType.Buku, amount = 1 });
+        AddItem(new Item { itemType = Item.ItemType.Buku, amount = 1 });
+        AddItem(new Item { itemType = Item.ItemType.Buku, amount = 1 });
+
         Debug.Log(itemList.Count);
     }
 
@@ -81,6 +85,19 @@ public class Inventory
         // Panggil event untuk memberi tahu bahwa inventori telah berubah.
         OnItemListChanged?.Invoke(this, EventArgs.Empty);
     }
+
+    public Item GetItemAtIndex(int index)
+    {
+        if (index >= 0 && index < itemList.Count)
+        {
+            return itemList[index];
+        }
+        else
+        {
+            return null;
+        }
+    }
+
 
 
 

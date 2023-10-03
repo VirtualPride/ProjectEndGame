@@ -6,10 +6,11 @@ public class Player2Controller : MonoBehaviour
 {
     public float speed = 5.0f; // Kecepatan karakter
     private Rigidbody2D rb;
-    public InventoryPlayer2 inventory;
+    public InventoryPlayer2 inventory; // Referensi ke objek InventoryPlayer2
 
     [SerializeField]
-    private UI_InventoryPlayer2 uI_Inventory;
+    private UI_InventoryPlayer2 uI_Inventory; // Referensi ke UI InventoryPlayer2
+    private int selectedItemIndex = 0; // Indeks item yang sedang dipilih dalam inventori
 
     // Tombol-tombol pergerakan yang dapat dikustomisasi oleh pemain
     public KeyCode moveUpKey = KeyCode.W;
@@ -19,14 +20,17 @@ public class Player2Controller : MonoBehaviour
 
     private void Awake()
     {
+        // Membuat instance baru dari InventoryPlayer2 dan menghubungkannya dengan inventory
         inventory = new InventoryPlayer2(UseItem);
-        uI_Inventory.SetInventory(inventory);
 
-
+        // Mengatur inventory UI dengan inventory yang telah dibuat dan mengirimkan referensi ke Player2Controller
+        uI_Inventory.SetInventory(inventory, this);
     }
+
+
     void Start()
     {
-        rb = GetComponent<Rigidbody2D>();
+        rb = GetComponent<Rigidbody2D>(); // Mengambil komponen Rigidbody2D dari GameObject
     }
 
     void Update()
@@ -50,6 +54,42 @@ public class Player2Controller : MonoBehaviour
 
         // Mengatur kecepatan karakter
         rb.velocity = movement.normalized * speed;
+
+        // Di dalam Update atau metode lain yang sesuai
+        if (Input.GetKeyDown(KeyCode.UpArrow))
+        {
+            if (selectedItemIndex > 0)
+            {
+                selectedItemIndex--;
+                Debug.Log("Selected item : " + inventory.GetItemAtIndex(selectedItemIndex).itemType);
+
+                // Panggil SetSelectedItemHighlight untuk mengatur tampilan gambar select
+                uI_Inventory.SetSelectedItemHighlight(selectedItemIndex);
+            }
+        }
+        else if (Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            if (selectedItemIndex < inventory.GetItemList().Count - 1)
+            {
+                selectedItemIndex++;
+                Debug.Log("Selected item : " + inventory.GetItemAtIndex(selectedItemIndex).itemType);
+
+                // Panggil SetSelectedItemHighlight untuk mengatur tampilan gambar select
+                uI_Inventory.SetSelectedItemHighlight(selectedItemIndex);
+            }
+        }
+
+        // Memeriksa input untuk menggunakan item dengan tombol "M"
+        if (Input.GetKeyDown(KeyCode.M))
+        {
+            // Mendapatkan item yang sedang dipilih
+            Item selectedItemAt = inventory.GetItemAtIndex(selectedItemIndex);
+
+            if (selectedItemAt != null)
+            {
+                inventory.UseItem(selectedItemAt); // Menggunakan item yang dipilih
+            }
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -57,8 +97,8 @@ public class Player2Controller : MonoBehaviour
         if (other.gameObject.CompareTag("Item"))
         {
             ItemWorld itemWorld = other.gameObject.GetComponent<ItemWorld>();
-            inventory.AddItem(itemWorld.GetItem());
-            itemWorld.DestroySelf();
+            inventory.AddItem(itemWorld.GetItem()); // Menambahkan item ke inventori
+            itemWorld.DestroySelf(); // Menghapus objek item di dunia
         }
     }
 
@@ -68,12 +108,19 @@ public class Player2Controller : MonoBehaviour
         {
             case Item.ItemType.Kunci:
                 Debug.Log("Kunci digunakan");
-                inventory.RemoveItem(new Item { itemType = Item.ItemType.Kunci, amount = 1 });
+                inventory.RemoveItem(new Item { itemType = Item.ItemType.Kunci, amount = 1 }); // Menghapus kunci dari inventori
                 break;
             case Item.ItemType.Buku:
                 Debug.Log("Buku digunakan");
-                inventory.RemoveItem(item);
+                inventory.RemoveItem(item); // Menghapus buku dari inventori
                 break;
         }
     }
+
+    public int GetSelectedItemIndex()
+    {
+        return selectedItemIndex;
+    }
+
+
 }

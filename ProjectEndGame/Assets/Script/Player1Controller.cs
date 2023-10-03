@@ -10,6 +10,7 @@ public class Player1Controller : MonoBehaviour
 
     [SerializeField]
     private UI_Inventory uI_Inventory;
+    private int selectedItemIndex = 0;
 
     // Tombol-tombol pergerakan yang dapat dikustomisasi oleh pemain
     public KeyCode moveUpKey = KeyCode.W;
@@ -19,10 +20,11 @@ public class Player1Controller : MonoBehaviour
 
     private void Awake()
     {
+        // Membuat instance baru dari Inventory dan menghubungkannya dengan inventory
         inventory = new Inventory(UseItem);
-        uI_Inventory.SetInventory(inventory);
 
-
+        // Mengatur inventory UI dengan inventory yang telah dibuat dan mengirimkan referensi ke Player1Controller
+        uI_Inventory.SetInventory(inventory, this);
     }
     void Start()
     {
@@ -50,6 +52,43 @@ public class Player1Controller : MonoBehaviour
 
         // Mengatur kecepatan karakter
         rb.velocity = movement.normalized * speed;
+
+        // Di dalam Update atau metode lain yang sesuai
+        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            if (selectedItemIndex > 0)
+            {
+                selectedItemIndex--;
+                Debug.Log("Selected item : " + inventory.GetItemAtIndex(selectedItemIndex).itemType);
+
+                // Panggil SetSelectedItemHighlight untuk mengatur tampilan gambar select
+                uI_Inventory.SetSelectedItemHighlight(selectedItemIndex);
+            }
+        }
+        else if (Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            if (selectedItemIndex < inventory.GetItemList().Count - 1)
+            {
+                selectedItemIndex++;
+                Debug.Log("Selected item : " + inventory.GetItemAtIndex(selectedItemIndex).itemType);
+
+                // Panggil SetSelectedItemHighlight untuk mengatur tampilan gambar select
+                uI_Inventory.SetSelectedItemHighlight(selectedItemIndex);
+            }
+        }
+
+
+        // Memeriksa input untuk menggunakan item dengan tombol "C"
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            // Mendapatkan item yang sedang dipilih
+            Item selectedItemAt = inventory.GetItemAtIndex(selectedItemIndex);
+
+            if (selectedItemAt != null)
+            {
+                inventory.UseItem(selectedItemAt);
+            }
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -76,4 +115,9 @@ public class Player1Controller : MonoBehaviour
                 break;
         }
     }
+    public int GetSelectedItemIndex()
+    {
+        return selectedItemIndex;
+    }
+
 }
