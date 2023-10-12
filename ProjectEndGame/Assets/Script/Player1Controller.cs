@@ -96,8 +96,34 @@ public class Player1Controller : MonoBehaviour
         if (other.gameObject.CompareTag("Item"))
         {
             ItemWorld itemWorld = other.gameObject.GetComponent<ItemWorld>();
-            inventory.AddItem(itemWorld.GetItem());
-            itemWorld.DestroySelf();
+
+            // Ambil item dari ItemWorld
+            Item item = itemWorld.GetItem();
+
+            if (item.IsStackable())
+            {
+                if (inventory.GetItemList().Count < 4)
+                {
+                    inventory.AddItem(item);
+                    itemWorld.DestroySelf();
+                }
+                else
+                {
+                    if (inventory.HasItemInInventory(item))
+                    {
+                        inventory.AddItem(item);
+                        itemWorld.DestroySelf();
+                    }
+                }
+            }
+            else
+            {
+                if (inventory.GetItemList().Count < 4)
+                {
+                    inventory.AddItem(item);
+                    itemWorld.DestroySelf();
+                }
+            }
         }
     }
 

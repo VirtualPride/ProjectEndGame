@@ -6,7 +6,6 @@ using UnityEngine;
 [Serializable]
 public class Item
 {
-    public bool isSelected = false;
     public enum ItemType
     {
         Kunci,
@@ -34,4 +33,6 @@ public class Item
             case ItemType.Buku: return false;
         }
     }
+
+
 }

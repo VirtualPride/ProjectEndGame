@@ -17,13 +17,14 @@ public class Inventory
         AddItem(new Item { itemType = Item.ItemType.Buku, amount = 1 });
         AddItem(new Item { itemType = Item.ItemType.Buku, amount = 1 });
         AddItem(new Item { itemType = Item.ItemType.Buku, amount = 1 });
-        AddItem(new Item { itemType = Item.ItemType.Buku, amount = 1 });
 
         Debug.Log(itemList.Count);
     }
 
     public void AddItem(Item item)
     {
+
+
         if (item.IsStackable())
         {
             bool itemAlreadyInInventory = false;
@@ -48,6 +49,7 @@ public class Inventory
         }
 
         OnItemListChanged?.Invoke(this, EventArgs.Empty);
+
     }
 
     public void UseItem(Item item)
@@ -97,6 +99,18 @@ public class Inventory
             return null;
         }
     }
+    public bool HasItemInInventory(Item item)
+    {
+        foreach (Item inventoryItem in itemList)
+        {
+            if (inventoryItem.itemType == item.itemType)
+            {
+                return true; // Item sejenis sudah ada di inventory
+            }
+        }
+        return false; // Item tidak ditemukan di inventory
+    }
+
 
 
 

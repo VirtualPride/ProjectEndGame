@@ -97,10 +97,39 @@ public class Player2Controller : MonoBehaviour
         if (other.gameObject.CompareTag("Item"))
         {
             ItemWorld itemWorld = other.gameObject.GetComponent<ItemWorld>();
-            inventory.AddItem(itemWorld.GetItem()); // Menambahkan item ke inventori
-            itemWorld.DestroySelf(); // Menghapus objek item di dunia
+
+            // Ambil item dari ItemWorld
+            Item item = itemWorld.GetItem();
+
+            if (item.IsStackable())
+            {
+                if (inventory.GetItemList().Count < 4)
+                {
+                    inventory.AddItem(item);
+                    itemWorld.DestroySelf();
+                }
+                else
+                {
+                    if (inventory.HasItemInInventory(item))
+                    {
+                        inventory.AddItem(item);
+                        itemWorld.DestroySelf();
+                    }
+                }
+            }
+            else
+            {
+                if (inventory.GetItemList().Count < 4)
+                {
+                    inventory.AddItem(item);
+                    itemWorld.DestroySelf();
+                }
+            }
         }
     }
+
+
+
 
     private void UseItem(Item item)
     {

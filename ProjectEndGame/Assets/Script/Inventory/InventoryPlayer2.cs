@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class InventoryPlayer2
 {
+    private bool itemAlreadyInInventory = false;
     public event EventHandler OnItemListChanged; // Event yang dipanggil ketika isi inventori berubah.
     private List<Item> itemList; // Daftar item dalam inventori.
     private Action<Item> useItemAction; // Aksi yang akan dilakukan saat menggunakan item.
@@ -28,7 +29,8 @@ public class InventoryPlayer2
     {
         if (item.IsStackable()) // Cek apakah item dapat di-stack (sama jenis item).
         {
-            bool itemAlreadyInInventory = false;
+
+
             foreach (Item inventoryItem in itemList)
             {
                 if (inventoryItem.itemType == item.itemType)
@@ -109,4 +111,18 @@ public class InventoryPlayer2
     {
         return itemList;
     }
+
+    public bool HasItemInInventory(Item item)
+    {
+        foreach (Item inventoryItem in itemList)
+        {
+            if (inventoryItem.itemType == item.itemType)
+            {
+                return true; // Item sejenis sudah ada di inventory
+            }
+        }
+        return false; // Item tidak ditemukan di inventory
+    }
+
+
 }
