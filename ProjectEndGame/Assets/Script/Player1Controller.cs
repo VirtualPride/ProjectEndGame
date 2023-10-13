@@ -6,14 +6,11 @@ public class Player1Controller : MonoBehaviour
 {
     public float speed = 5.0f; // Kecepatan karakter
     private Rigidbody2D rb;
-    private bool menuOpened = false; // Status menu inventory
-    private bool playerMovementEnabled = true; // Status pergerakan karakter
-    private Vector3 lastPlayerPosition;
-    public Inventory inventory; // Referensi ke objek InventoryPlayer2
+    public Inventory inventory;
 
     [SerializeField]
-    private UI_Inventory uI_Inventory; // Referensi ke UI InventoryPlayer2
-    private int selectedItemIndex = 0; // Indeks item yang sedang dipilih dalam inventori
+    private UI_Inventory uI_Inventory;
+    private int selectedItemIndex = 0;
 
     // Tombol-tombol pergerakan yang dapat dikustomisasi oleh pemain
     public KeyCode moveUpKey = KeyCode.W;
@@ -23,108 +20,24 @@ public class Player1Controller : MonoBehaviour
 
     private void Awake()
     {
-        // Membuat instance baru dari InventoryPlayer2 dan menghubungkannya dengan inventory
+        // Membuat instance baru dari Inventory dan menghubungkannya dengan inventory
         inventory = new Inventory(UseItem);
 
-        // Mengatur inventory UI dengan inventory yang telah dibuat dan mengirimkan referensi ke Player2Controller
+        // Mengatur inventory UI dengan inventory yang telah dibuat dan mengirimkan referensi ke Player1Controller
         uI_Inventory.SetInventory(inventory, this);
-        uI_Inventory.gameObject.SetActive(false);
     }
-
-
     void Start()
     {
-        rb = GetComponent<Rigidbody2D>(); // Mengambil komponen Rigidbody2D dari GameObject
+        rb = GetComponent<Rigidbody2D>();
     }
 
     void Update()
     {
         // Mendapatkan input dari pemain
-
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            if (!menuOpened)
-            {
-                lastPlayerPosition = transform.position;
-                OpenMenu();
-            }
-            else
-            {
-                CloseMenu();
-            }
-        }
-
-        if (playerMovementEnabled && !menuOpened)
-        {
-            HandleMovementInput();
-        }
-        else
-        {
-            HandleInventoryInput();
-        }
-    }
-
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        if (other.gameObject.CompareTag("Item"))
-        {
-            ItemWorld itemWorld = other.gameObject.GetComponent<ItemWorld>();
-            Item item = itemWorld.GetItem();
-
-            if (inventory.GetItemList().Count < 4)
-            {
-                inventory.AddItem(item);
-                itemWorld.DestroySelf();
-            }
-            else if (item.IsStackable() && inventory.HasItemInInventory(item))
-            {
-                inventory.AddItem(item);
-                itemWorld.DestroySelf();
-            }
-        }
-    }
-
-    private void UseItem(Item item)
-    {
-        switch (item.itemType)
-        {
-            case Item.ItemType.Kunci:
-                Debug.Log("Kunci digunakan");
-                inventory.RemoveItem(new Item { itemType = Item.ItemType.Kunci, amount = 1 }); // Menghapus kunci dari inventori
-                break;
-            case Item.ItemType.Buku:
-                Debug.Log("Buku digunakan");
-                inventory.RemoveItem(item); // Menghapus buku dari inventori
-                break;
-        }
-    }
-
-    public int GetSelectedItemIndex()
-    {
-        return selectedItemIndex;
-    }
-
-    private void OpenMenu()
-    {
-        rb.velocity = Vector2.zero; // Hentikan pergerakan
-        transform.position = lastPlayerPosition;
-        menuOpened = true;
-        uI_Inventory.gameObject.SetActive(true); // Mengaktifkan UI InventoryPlayer2
-        playerMovementEnabled = false;
-
-    }
-
-    private void CloseMenu()
-    {
-        menuOpened = false;
-        uI_Inventory.gameObject.SetActive(false);
-        playerMovementEnabled = true;
-    }
-    void HandleMovementInput()
-    {
         float moveHorizontal = 0f;
         float moveVertical = 0f;
 
+        // Memeriksa input tombol yang telah dikustomisasi
         if (Input.GetKey(moveUpKey))
             moveVertical = 1f;
         if (Input.GetKey(moveDownKey))
@@ -137,18 +50,11 @@ public class Player1Controller : MonoBehaviour
         // Menghitung vektor pergerakan
         Vector2 movement = new Vector2(moveHorizontal, moveVertical);
 
-        if (playerMovementEnabled)
-        {
-            // Mengatur kecepatan karakter
-            rb.velocity = movement.normalized * speed;
-        }
-    }
+        // Mengatur kecepatan karakter
+        rb.velocity = movement.normalized * speed;
 
-
-
-    void HandleInventoryInput()
-    {
-        if (Input.GetKeyDown(KeyCode.A))
+        // Di dalam Update atau metode lain yang sesuai
+        if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
             if (selectedItemIndex > 0)
             {
@@ -159,7 +65,7 @@ public class Player1Controller : MonoBehaviour
                 uI_Inventory.SetSelectedItemHighlight(selectedItemIndex);
             }
         }
-        else if (Input.GetKeyDown(KeyCode.D))
+        else if (Input.GetKeyDown(KeyCode.RightArrow))
         {
             if (selectedItemIndex < inventory.GetItemList().Count - 1)
             {
@@ -171,7 +77,8 @@ public class Player1Controller : MonoBehaviour
             }
         }
 
-        // Memeriksa input untuk menggunakan item dengan tombol "M"
+
+        // Memeriksa input untuk menggunakan item dengan tombol "C"
         if (Input.GetKeyDown(KeyCode.C))
         {
             // Mendapatkan item yang sedang dipilih
@@ -179,10 +86,64 @@ public class Player1Controller : MonoBehaviour
 
             if (selectedItemAt != null)
             {
-                inventory.UseItem(selectedItemAt); // Menggunakan item yang dipilih
+                inventory.UseItem(selectedItemAt);
             }
         }
     }
 
-}
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.gameObject.CompareTag("Item"))
+        {
+            ItemWorld itemWorld = other.gameObject.GetComponent<ItemWorld>();
 
+            // Ambil item dari ItemWorld
+            Item item = itemWorld.GetItem();
+
+            if (item.IsStackable())
+            {
+                if (inventory.GetItemList().Count < 4)
+                {
+                    inventory.AddItem(item);
+                    itemWorld.DestroySelf();
+                }
+                else
+                {
+                    if (inventory.HasItemInInventory(item))
+                    {
+                        inventory.AddItem(item);
+                        itemWorld.DestroySelf();
+                    }
+                }
+            }
+            else
+            {
+                if (inventory.GetItemList().Count < 4)
+                {
+                    inventory.AddItem(item);
+                    itemWorld.DestroySelf();
+                }
+            }
+        }
+    }
+
+    private void UseItem(Item item)
+    {
+        switch (item.itemType)
+        {
+            case Item.ItemType.Kunci:
+                Debug.Log("Kunci digunakan");
+                inventory.RemoveItem(new Item { itemType = Item.ItemType.Kunci, amount = 1 });
+                break;
+            case Item.ItemType.Buku:
+                Debug.Log("Buku digunakan");
+                inventory.RemoveItem(item);
+                break;
+        }
+    }
+    public int GetSelectedItemIndex()
+    {
+        return selectedItemIndex;
+    }
+
+}
