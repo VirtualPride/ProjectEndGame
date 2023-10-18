@@ -82,6 +82,21 @@ public class Player2Controller : MonoBehaviour
                 itemWorld.DestroySelf();
             }
         }
+
+        KeyDoor keyDoor = other.gameObject.GetComponent<KeyDoor>();
+        if (keyDoor != null)
+        {
+            if (inventory.ContainsItem(keyDoor.GetItemType()))
+            {
+                Debug.Log("buka pintu");
+                inventory.RemoveKunci(keyDoor.GetItemType());
+                keyDoor.OpenDoor();
+            }
+            else
+            {
+                Debug.Log("tidak punya kunci");
+            }
+        }
     }
 
     private void UseItem(Item item)
@@ -90,11 +105,11 @@ public class Player2Controller : MonoBehaviour
         {
             case Item.ItemType.Kunci:
                 Debug.Log("Kunci digunakan");
-                inventory.RemoveItem(new Item { itemType = Item.ItemType.Kunci, amount = 1 }); // Menghapus kunci dari inventori
+                inventory.RemoveItem(item); // Menghapus kunci dari inventori
                 break;
             case Item.ItemType.Buku:
                 Debug.Log("Buku digunakan");
-                inventory.RemoveItem(item); // Menghapus buku dari inventori
+                inventory.RemoveItem(new Item { itemType = Item.ItemType.Buku, amount = 1 }); // Menghapus buku dari inventori
                 break;
         }
     }

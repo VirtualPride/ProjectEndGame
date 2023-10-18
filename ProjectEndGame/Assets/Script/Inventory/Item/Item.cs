@@ -29,8 +29,8 @@ public class Item
         switch (itemType)
         {
             default:
-            case ItemType.Kunci: return true;
-            case ItemType.Buku: return false;
+            case ItemType.Kunci: return false;
+            case ItemType.Buku: return true;
         }
     }
 

@@ -11,6 +11,7 @@ public class Player1Controller : MonoBehaviour
     private Vector3 lastPlayerPosition;
     public Inventory inventory; // Referensi ke objek InventoryPlayer2
 
+
     [SerializeField]
     private UI_Inventory uI_Inventory; // Referensi ke UI InventoryPlayer2
     private int selectedItemIndex = 0; // Indeks item yang sedang dipilih dalam inventori
@@ -41,7 +42,7 @@ public class Player1Controller : MonoBehaviour
     {
         // Mendapatkan input dari pemain
 
-        if (Input.GetKeyDown(KeyCode.E))
+        if (Input.GetKeyDown(KeyCode.Q))
         {
             if (!menuOpened)
             {
@@ -82,6 +83,23 @@ public class Player1Controller : MonoBehaviour
                 itemWorld.DestroySelf();
             }
         }
+
+        KeyDoor keyDoor = other.gameObject.GetComponent<KeyDoor>();
+        if (keyDoor != null)
+        {
+            if (inventory.ContainsItem(keyDoor.GetItemType()))
+            {
+                Debug.Log("buka pintu");
+                inventory.RemoveKunci(keyDoor.GetItemType());
+                keyDoor.OpenDoor();
+            }
+            else
+            {
+                Debug.Log("tidak punya kunci");
+            }
+        }
+
+
     }
 
     private void UseItem(Item item)
@@ -90,11 +108,11 @@ public class Player1Controller : MonoBehaviour
         {
             case Item.ItemType.Kunci:
                 Debug.Log("Kunci digunakan");
-                inventory.RemoveItem(new Item { itemType = Item.ItemType.Kunci, amount = 1 }); // Menghapus kunci dari inventori
+                inventory.RemoveItem(item); // Menghapus kunci dari inventori
                 break;
             case Item.ItemType.Buku:
                 Debug.Log("Buku digunakan");
-                inventory.RemoveItem(item); // Menghapus buku dari inventori
+                inventory.RemoveItem(new Item { itemType = Item.ItemType.Buku, amount = 1 }); // Menghapus buku dari inventori
                 break;
         }
     }
@@ -183,6 +201,7 @@ public class Player1Controller : MonoBehaviour
             }
         }
     }
+
 
 }
 
