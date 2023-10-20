@@ -14,4 +14,5 @@ public class ItemAssets : MonoBehaviour
     public Transform pfItemWorld;
     public Sprite kunciSprite;
     public Sprite bukuSprite;
+    public Sprite kunci2Sprite;
 }

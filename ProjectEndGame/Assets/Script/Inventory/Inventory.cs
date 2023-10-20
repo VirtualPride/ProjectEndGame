@@ -14,7 +14,7 @@ public class Inventory
         this.useItemAction = useItemAction;
         itemList = new List<Item>();
         AddItem(new Item { itemType = Item.ItemType.Kunci, amount = 1 });
-        AddItem(new Item { itemType = Item.ItemType.Buku, amount = 1 });
+        AddItem(new Item { itemType = Item.ItemType.Kunci2, amount = 1 });
         AddItem(new Item { itemType = Item.ItemType.Buku, amount = 1 });
         AddItem(new Item { itemType = Item.ItemType.Buku, amount = 1 });
 

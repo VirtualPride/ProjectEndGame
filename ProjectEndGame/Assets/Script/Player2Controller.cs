@@ -10,6 +10,10 @@ public class Player2Controller : MonoBehaviour
     private bool playerMovementEnabled = true; // Status pergerakan karakter
     private Vector3 lastPlayerPosition;
     public InventoryPlayer2 inventory; // Referensi ke objek InventoryPlayer2
+    private Item.ItemType keyDoorType;
+    private bool nearDoor;
+    private bool canOpenDoor;
+    private KeyDoor currentKeyDoor; // Menyimpan referensi ke pintu saat ini yang dapat dibuka
 
     [SerializeField]
     private UI_InventoryPlayer2 uI_Inventory; // Referensi ke UI InventoryPlayer2
@@ -86,16 +90,13 @@ public class Player2Controller : MonoBehaviour
         KeyDoor keyDoor = other.gameObject.GetComponent<KeyDoor>();
         if (keyDoor != null)
         {
-            if (inventory.ContainsItem(keyDoor.GetItemType()))
-            {
-                Debug.Log("buka pintu");
-                inventory.RemoveKunci(keyDoor.GetItemType());
-                keyDoor.OpenDoor();
-            }
-            else
-            {
-                Debug.Log("tidak punya kunci");
-            }
+            keyDoorType = keyDoor.GetItemType();
+            nearDoor = true;
+            currentKeyDoor = keyDoor;
+        }
+        else
+        {
+            nearDoor = false;
         }
     }
 
@@ -104,12 +105,46 @@ public class Player2Controller : MonoBehaviour
         switch (item.itemType)
         {
             case Item.ItemType.Kunci:
-                Debug.Log("Kunci digunakan");
-                inventory.RemoveItem(item); // Menghapus kunci dari inventori
+                if (nearDoor && keyDoorType == item.itemType)
+                {
+                    canOpenDoor = true;
+                    inventory.RemoveItem(item);
+                    if (canOpenDoor && currentKeyDoor != null)
+                    {
+                        currentKeyDoor.OpenDoor();
+                        canOpenDoor = false;
+                        currentKeyDoor = null;
+                    }
+
+                }
+                else
+                {
+                    canOpenDoor = false;
+                    Debug.Log("Pergi kedekat pintu");
+                }
                 break;
             case Item.ItemType.Buku:
                 Debug.Log("Buku digunakan");
                 inventory.RemoveItem(new Item { itemType = Item.ItemType.Buku, amount = 1 }); // Menghapus buku dari inventori
+                break;
+            case Item.ItemType.Kunci2:
+                if (nearDoor && keyDoorType == item.itemType)
+                {
+                    canOpenDoor = true;
+                    inventory.RemoveItem(item);
+                    if (canOpenDoor && currentKeyDoor != null)
+                    {
+                        currentKeyDoor.OpenDoor();
+                        canOpenDoor = false;
+                        currentKeyDoor = null;
+                    }
+
+                }
+                else
+                {
+                    canOpenDoor = false;
+                    Debug.Log("Pergi kedekat pintu");
+                }
                 break;
         }
     }

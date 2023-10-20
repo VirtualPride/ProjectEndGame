@@ -9,7 +9,8 @@ public class Item
     public enum ItemType
     {
         Kunci,
-        Buku
+        Buku,
+        Kunci2
     }
 
     public ItemType itemType;
@@ -20,6 +21,7 @@ public class Item
         {
             default:
             case ItemType.Kunci: return ItemAssets.Instance.kunciSprite;
+            case ItemType.Kunci2: return ItemAssets.Instance.kunci2Sprite;
             case ItemType.Buku: return ItemAssets.Instance.bukuSprite;
         }
     }
@@ -30,6 +32,7 @@ public class Item
         {
             default:
             case ItemType.Kunci: return false;
+            case ItemType.Kunci2: return false;
             case ItemType.Buku: return true;
         }
     }
