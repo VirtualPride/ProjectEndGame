@@ -106,44 +106,6 @@ public class Inventory
         }
         return false; // Item tidak ditemukan di inventory
     }
-    public bool ContainsItem(Item.ItemType itemType, int requiredAmount = 1)
-    {
-        int itemCount = 0;
-        foreach (Item inventoryItem in itemList)
-        {
-            if (inventoryItem.itemType == itemType)
-            {
-                itemCount += inventoryItem.amount;
-                if (itemCount >= requiredAmount)
-                {
-                    return true; // Pemain memiliki jumlah item yang memadai
-                }
-            }
-        }
-        return false; // Pemain tidak memiliki jumlah item yang memadai
-    }
-    public void RemoveKunci(Item.ItemType itemType)
-    {
-        Item itemToRemove = null;
-
-        foreach (Item item in itemList)
-        {
-            if (item.itemType == itemType)
-            {
-                itemToRemove = item;
-                break;
-            }
-        }
-
-        if (itemToRemove != null)
-        {
-            itemList.Remove(itemToRemove);
-            OnItemListChanged?.Invoke(this, EventArgs.Empty);
-        }
-    }
-
-
-
 
     public List<Item> GetItemList()
     {

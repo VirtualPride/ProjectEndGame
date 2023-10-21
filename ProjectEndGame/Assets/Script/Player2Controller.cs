@@ -105,46 +105,14 @@ public class Player2Controller : MonoBehaviour
         switch (item.itemType)
         {
             case Item.ItemType.Kunci:
-                if (nearDoor && keyDoorType == item.itemType)
-                {
-                    canOpenDoor = true;
-                    inventory.RemoveItem(item);
-                    if (canOpenDoor && currentKeyDoor != null)
-                    {
-                        currentKeyDoor.OpenDoor();
-                        canOpenDoor = false;
-                        currentKeyDoor = null;
-                    }
-
-                }
-                else
-                {
-                    canOpenDoor = false;
-                    Debug.Log("Pergi kedekat pintu");
-                }
+                UseKey(item);
                 break;
             case Item.ItemType.Buku:
                 Debug.Log("Buku digunakan");
                 inventory.RemoveItem(new Item { itemType = Item.ItemType.Buku, amount = 1 }); // Menghapus buku dari inventori
                 break;
             case Item.ItemType.Kunci2:
-                if (nearDoor && keyDoorType == item.itemType)
-                {
-                    canOpenDoor = true;
-                    inventory.RemoveItem(item);
-                    if (canOpenDoor && currentKeyDoor != null)
-                    {
-                        currentKeyDoor.OpenDoor();
-                        canOpenDoor = false;
-                        currentKeyDoor = null;
-                    }
-
-                }
-                else
-                {
-                    canOpenDoor = false;
-                    Debug.Log("Pergi kedekat pintu");
-                }
+                UseKey(item);
                 break;
         }
     }
@@ -234,4 +202,24 @@ public class Player2Controller : MonoBehaviour
         }
     }
 
+    public void UseKey(Item item)
+    {
+        if (nearDoor && keyDoorType == item.itemType)
+        {
+            canOpenDoor = true;
+            inventory.RemoveItem(item);
+            if (canOpenDoor && currentKeyDoor != null)
+            {
+                currentKeyDoor.OpenDoor();
+                canOpenDoor = false;
+                currentKeyDoor = null;
+            }
+
+        }
+        else
+        {
+            canOpenDoor = false;
+            Debug.Log("Pergi kedekat pintu");
+        }
+    }
 }
