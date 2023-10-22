@@ -10,4 +10,5 @@ public class ItemWorldSpawner : MonoBehaviour
         ItemWorld.SpawnItemWorld(transform.position, item);
         Destroy(gameObject);
     }
+
 }

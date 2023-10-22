@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 2775756098336136327}
   - component: {fileID: 2775756098336136326}
   - component: {fileID: 5428854580404882838}
+  - component: {fileID: 1977469448335775473}
   m_Layer: 0
   m_Name: pfItemWorld
   m_TagString: Item
@@ -104,7 +105,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 6.02, y: 4.12}
+    oldSize: {x: 2.07, y: 1.87}
     newSize: {x: 2.69, y: 2.07}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -146,3 +147,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e9993fcbeec1374cb95493c42a8b454, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1977469448335775473
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2775756098336136321}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4adc16bf7078f4e4cbf2c21b5a32f1ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemType: 0

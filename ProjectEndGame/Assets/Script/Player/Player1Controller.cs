@@ -14,6 +14,7 @@ public class Player1Controller : MonoBehaviour
     private bool nearDoor;
     private bool canOpenDoor;
     private KeyDoor currentKeyDoor; // Menyimpan referensi ke pintu saat ini yang dapat dibuka
+    private PlayerInteract playerInteract;
 
     [SerializeField]
     private UI_Inventory uI_Inventory; // Referensi ke UI InventoryPlayer2
@@ -29,6 +30,7 @@ public class Player1Controller : MonoBehaviour
     {
         // Membuat instance baru dari InventoryPlayer2 dan menghubungkannya dengan inventory
         inventory = new Inventory(UseItem);
+        playerInteract = GetComponent<PlayerInteract>();
 
         // Mengatur inventory UI dengan inventory yang telah dibuat dan mengirimkan referensi ke Player2Controller
         uI_Inventory.SetInventory(inventory, this);
@@ -64,27 +66,21 @@ public class Player1Controller : MonoBehaviour
         else
         {
             HandleInventoryInput();
+
         }
+        if (!menuOpened)
+        {
+            if (Input.GetKeyDown(KeyCode.C))
+            {
+                playerInteract.DetectInteractableObjects();
+                ItemInteract itemInteract = playerInteract.GetInteractableObject() as ItemInteract;
+            }
+        }
+
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.gameObject.CompareTag("Item"))
-        {
-            ItemWorld itemWorld = other.gameObject.GetComponent<ItemWorld>();
-            Item item = itemWorld.GetItem();
-
-            if (inventory.GetItemList().Count < 4)
-            {
-                inventory.AddItem(item);
-                itemWorld.DestroySelf();
-            }
-            else if (item.IsStackable() && inventory.HasItemInInventory(item))
-            {
-                inventory.AddItem(item);
-                itemWorld.DestroySelf();
-            }
-        }
 
         KeyDoor keyDoor = other.gameObject.GetComponent<KeyDoor>();
         if (keyDoor != null)
@@ -219,4 +215,11 @@ public class Player1Controller : MonoBehaviour
             Debug.Log("Pergi kedekat pintu");
         }
     }
+
+    public void AddItemToInventory(Item item)
+    {
+        inventory.AddItem(item);
+    }
+
+
 }
