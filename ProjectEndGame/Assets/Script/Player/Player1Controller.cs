@@ -8,17 +8,25 @@ public class Player1Controller : MonoBehaviour
     private Rigidbody2D rb;
     private bool menuOpened = false; // Status menu inventory
     private bool playerMovementEnabled = true; // Status pergerakan karakter
-    private Vector3 lastPlayerPosition;
     public Inventory inventory; // Referensi ke objek InventoryPlayer2
+    public InventoryStorage inventoryStorage;
     private Item.ItemType keyDoorType;
     private bool nearDoor;
     private bool canOpenDoor;
+    private bool tradeOpen;
+
     private KeyDoor currentKeyDoor; // Menyimpan referensi ke pintu saat ini yang dapat dibuka
     private PlayerInteract playerInteract;
-
+    [HideInInspector]
+    public Vector3 lastPlayerPosition;
     [SerializeField]
     private UI_Inventory uI_Inventory; // Referensi ke UI InventoryPlayer2
+    [SerializeField]
+    private UI_InventoryStorage uI_InventoryStorage;
     private int selectedItemIndex = 0; // Indeks item yang sedang dipilih dalam inventori
+    private int selectedItemIndexPlayer = 0; // Indeks item yang dipilih dalam UI Player
+    private int selectedItemIndexStorage = 0;
+
 
     // Tombol-tombol pergerakan yang dapat dikustomisasi oleh pemain
     public KeyCode moveUpKey = KeyCode.W;
@@ -30,11 +38,14 @@ public class Player1Controller : MonoBehaviour
     {
         // Membuat instance baru dari InventoryPlayer2 dan menghubungkannya dengan inventory
         inventory = new Inventory(UseItem);
+        inventoryStorage = new InventoryStorage(UseItem);
         playerInteract = GetComponent<PlayerInteract>();
 
         // Mengatur inventory UI dengan inventory yang telah dibuat dan mengirimkan referensi ke Player2Controller
         uI_Inventory.SetInventory(inventory, this);
+        uI_InventoryStorage.SetInventory(inventoryStorage, this);
         uI_Inventory.gameObject.SetActive(false);
+        uI_InventoryStorage.gameObject.SetActive(false);
     }
 
     void Start()
@@ -66,8 +77,17 @@ public class Player1Controller : MonoBehaviour
         else
         {
             HandleInventoryInput();
-
         }
+        if (!playerMovementEnabled && menuOpened && tradeOpen)
+        {
+            HandleSaveItemInput();
+            if (Input.GetKeyDown(KeyCode.X))
+            {
+                CloseTrade();
+                CloseMenu();
+            }
+        }
+
         if (!menuOpened)
         {
             if (Input.GetKeyDown(KeyCode.C))
@@ -118,7 +138,7 @@ public class Player1Controller : MonoBehaviour
         return selectedItemIndex;
     }
 
-    private void OpenMenu()
+    public void OpenMenu()
     {
         rb.velocity = Vector2.zero; // Hentikan pergerakan
         transform.position = lastPlayerPosition;
@@ -127,11 +147,23 @@ public class Player1Controller : MonoBehaviour
         playerMovementEnabled = false;
     }
 
-    private void CloseMenu()
+    public void CloseMenu()
     {
         menuOpened = false;
         uI_Inventory.gameObject.SetActive(false);
         playerMovementEnabled = true;
+    }
+
+    public void OpenTrade()
+    {
+        uI_InventoryStorage.gameObject.SetActive(true);
+        tradeOpen = true;
+    }
+
+    public void CloseTrade()
+    {
+        uI_InventoryStorage.gameObject.SetActive(false);
+        tradeOpen = false;
     }
 
     void HandleMovementInput()
@@ -221,5 +253,116 @@ public class Player1Controller : MonoBehaviour
         inventory.AddItem(item);
     }
 
+    public void HandleSaveItemInput()
+    {
 
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            if (selectedItemIndexPlayer > 0)
+            {
+                selectedItemIndexPlayer--;
+                Debug.Log("Selected item : " + inventory.GetItemAtIndex(selectedItemIndexPlayer).itemType);
+
+                // Panggil SetSelectedItemHighlight untuk mengatur tampilan gambar select di UI Player
+                uI_Inventory.SetSelectedItemHighlight(selectedItemIndexPlayer);
+
+                // Nonaktifkan gambar select di UI Storage
+
+            }
+        }
+        else if (Input.GetKeyDown(KeyCode.D))
+        {
+            if (selectedItemIndexPlayer < inventory.GetItemList().Count - 1)
+            {
+                selectedItemIndexPlayer++;
+                Debug.Log("Selected item : " + inventory.GetItemAtIndex(selectedItemIndexPlayer).itemType);
+
+                // Panggil SetSelectedItemHighlight untuk mengatur tampilan gambar select di UI Player
+                uI_Inventory.SetSelectedItemHighlight(selectedItemIndexPlayer);
+
+                // Nonaktifkan gambar select di UI Storage
+
+            }
+        }
+
+        // Memeriksa input untuk menggunakan item dengan tombol "C"
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            // Mendapatkan item yang sedang dipilih dari inventory UI Player
+            Item selectedItemAt = inventory.GetItemAtIndex(selectedItemIndexPlayer);
+
+            if (selectedItemAt != null)
+            {
+                // Cek jika item stackable
+                if (selectedItemAt.IsStackable())
+                {
+                    // Jika item stackable, kurangi satu jumlahnya dalam inventory
+                    inventoryStorage.AddItem(selectedItemAt);
+                    selectedItemAt.amount--;
+
+                    // Jika jumlahnya 0, hapus item dari inventory
+                    if (selectedItemAt.amount == 0)
+                    {
+                        inventory.RemoveItem(selectedItemAt);
+                    }
+
+                    // Tambahkan item ke storage
+
+                }
+                else
+                {
+                    inventoryStorage.AddItem(selectedItemAt);
+                    // Jika item tidak stackable, hapus item dari inventory
+                    inventory.RemoveItem(selectedItemAt);
+
+                    // Tambahkan item ke storage
+
+                }
+            }
+        }
+    }
+
+    public void HandleRetriveItemInput()
+    {
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            if (selectedItemIndexStorage > 0)
+            {
+                selectedItemIndexStorage--;
+                Debug.Log("Selected item : " + inventory.GetItemAtIndex(selectedItemIndexStorage).itemType);
+
+                // Panggil SetSelectedItemHighlight untuk mengatur tampilan gambar select di UI Player
+                uI_Inventory.SetSelectedItemHighlight(selectedItemIndexStorage);
+
+                // Nonaktifkan gambar select di UI Storage
+
+            }
+        }
+        else if (Input.GetKeyDown(KeyCode.D))
+        {
+            if (selectedItemIndexStorage < inventory.GetItemList().Count - 1)
+            {
+                selectedItemIndexStorage++;
+                Debug.Log("Selected item : " + inventory.GetItemAtIndex(selectedItemIndexStorage).itemType);
+
+                // Panggil SetSelectedItemHighlight untuk mengatur tampilan gambar select di UI Player
+                uI_Inventory.SetSelectedItemHighlight(selectedItemIndexStorage);
+
+                // Nonaktifkan gambar select di UI Storage
+
+            }
+        }
+
+        // Memeriksa input untuk menggunakan item dengan tombol "C"
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            // Mendapatkan item yang sedang dipilih dari inventory UI Player
+            Item selectedItemAt = inventory.GetItemAtIndex(selectedItemIndexStorage);
+
+            if (selectedItemAt != null)
+            {
+                inventory.UseItem(selectedItemAt); // Menggunakan item yang dipilih
+            }
+        }
+    }
 }
