@@ -15,6 +15,7 @@ public class InventoryStorage
         itemList = new List<Item>();
         AddItem(new Item { itemType = Item.ItemType.Kunci, amount = 1 });
         AddItem(new Item { itemType = Item.ItemType.Kunci2, amount = 1 });
+
     }
 
     public void AddItem(Item item)
