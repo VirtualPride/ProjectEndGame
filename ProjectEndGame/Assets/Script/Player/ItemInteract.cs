@@ -18,31 +18,39 @@ public class ItemInteract : MonoBehaviour, IInteractable
         {
             Item item = itemWorld.GetItem(); // Dapatkan item dari ItemWorld
 
-            // Cari objek Player1Controller dalam hierarki
-            Player1Controller playerController = FindObjectOfType<Player1Controller>();
+            Player1Controller player1Controller = FindObjectOfType<Player1Controller>();
+            Player2Controller player2Controller = FindObjectOfType<Player2Controller>();
 
-            if (playerController != null && item != null)
+            if (item != null)
             {
-                if (playerController.inventory.GetItemList().Count < 4)
+                // Periksa apakah player 1 lebih dekat atau player 2 lebih dekat dengan ItemInteract
+                float distanceToPlayer1 = Vector3.Distance(player1Controller.transform.position, transform.position);
+                float distanceToPlayer2 = Vector3.Distance(player2Controller.transform.position, transform.position);
+
+                if (distanceToPlayer1 < distanceToPlayer2)
                 {
-                    playerController.AddItemToInventory(item); // Tambahkan item ke inventory
-                    itemWorld.DestroySelf(); // Hancurkan objek ItemWorld
+                    // Jika player 1 lebih dekat, tambahkan item ke inventory Player 1
+                    if (player1Controller != null && player1Controller.inventory.GetItemList().Count < 4)
+                    {
+                        player1Controller.AddItemToInventory(item);
+                    }
                 }
-                else if (item.IsStackable() && playerController.inventory.HasItemInInventory(item))
+                else
                 {
-                    playerController.AddItemToInventory(item); // Tambahkan item ke inventory
-                    itemWorld.DestroySelf(); // Hancurkan objek ItemWorld
+                    // Jika player 2 lebih dekat, tambahkan item ke inventory Player 2
+                    if (player2Controller != null && player2Controller.inventoryPlayer2.GetItemList().Count < 4)
+                    {
+                        player2Controller.AddItemToInventory(item);
+                    }
                 }
 
+                itemWorld.DestroySelf(); // Hancurkan objek ItemWorld
             }
         }
     }
-
 
     public Transform GetTransform()
     {
         return transform;
     }
-
 }
-

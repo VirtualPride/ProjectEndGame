@@ -4,27 +4,27 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class UI_InventoryPlayer2 : MonoBehaviour
+public class UI_InventoryStoragePlayer2 : MonoBehaviour
 {
-    private InventoryPlayer2 inventory;
+    private InventoryStorage inventoryStorage;
     private Transform itemSlotContainer;
     private Transform itemSlotTemplate;
 
-    private Player2Controller player2Controller;
+    private Player2Controller playerController;
 
     private void Awake()
     {
-        itemSlotContainer = transform.Find("ItemSlotContainerPlayer2");
-        itemSlotTemplate = itemSlotContainer.Find("ItemSlotTemplatePlayer2");
+        itemSlotContainer = transform.Find("ItemSlotContainerStorage");
+        itemSlotTemplate = itemSlotContainer.Find("ItemSlotTemplateStorage");
     }
 
-    public void SetInventory(InventoryPlayer2 inventory, Player2Controller player2Controller)
+    public void SetInventory(InventoryStorage inventoryStorage, Player2Controller playerController)
     {
-        this.inventory = inventory;
-        this.player2Controller = player2Controller; // Inisialisasi referensi ke Player2Controller
+        this.inventoryStorage = inventoryStorage;
+        this.playerController = playerController; // Inisialisasi referensi ke Player2Controller
 
         // Menambahkan event handler untuk event OnItemListChanged dari InventoryPlayer2
-        inventory.OnItemListChanged += Inventory_OnItemListChanged;
+        inventoryStorage.OnItemListChanged += Inventory_OnItemListChanged;
 
         // Memuat ulang tampilan inventori
         RefreshInventoryItems();
@@ -49,11 +49,11 @@ public class UI_InventoryPlayer2 : MonoBehaviour
         int x = 0; // Koordinat X untuk item slot
         int y = 0; // Koordinat Y untuk item slot
         float itemSlotCellSize = 60f; // Ukuran setiap item slot
-        int selectedItemIndex = player2Controller.GetSelectedItemIndex(); // Ambil indeks item yang dipilih dari Player2Controller
+        int selectedItemIndex = playerController.GetSelectedItemIndex(); // Ambil indeks item yang dipilih dari Player2Controller
         int childIndex = 0; // Indeks untuk item slot
 
         // Iterasi melalui semua item dalam inventori dan membuat item slot baru untuk setiap item
-        foreach (Item item in inventory.GetItemList())
+        foreach (Item item in inventoryStorage.GetItemList())
         {
             // Membuat objek RectTransform sebagai item slot baru dari itemSlotTemplate
             RectTransform itemSlotTransform = Instantiate(itemSlotTemplate, itemSlotContainer).GetComponent<RectTransform>();

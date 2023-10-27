@@ -5,7 +5,8 @@ using UnityEngine;
 public class Player1Controller : MonoBehaviour
 {
     public float speed = 5.0f; // Kecepatan karakter
-    private Rigidbody2D rb;
+    [HideInInspector]
+    public Rigidbody2D rb;
     private bool menuOpened = false;
     // Status menu inventory
     public Inventory inventory; // Referensi ke objek InventoryPlayer2
@@ -64,8 +65,7 @@ public class Player1Controller : MonoBehaviour
     void Update()
     {
         // Mendapatkan input dari pemain
-        Debug.Log(selectedItemIndexStorage);
-        if (Input.GetKeyDown(KeyCode.Q) && !tradeOpen)
+        if (Input.GetKeyDown(KeyCode.X) && !tradeOpen && !storageInteract.panelOnPlayer1)
         {
             if (!menuOpened)
             {
@@ -273,6 +273,7 @@ public class Player1Controller : MonoBehaviour
 
     public void HandleSaveItemInput()
     {
+        uI_InventoryStorage.SetSelectedItemHighlight(-1);
         if (Input.GetKeyDown(KeyCode.A))
         {
             if (selectedItemIndexPlayer > 0)
@@ -283,8 +284,6 @@ public class Player1Controller : MonoBehaviour
                 // Panggil SetSelectedItemHighlight untuk mengatur tampilan gambar select di UI Player
                 uI_Inventory.SetSelectedItemHighlight(selectedItemIndexPlayer);
 
-                // Nonaktifkan gambar select di UI Storage
-                uI_InventoryStorage.SetSelectedItemHighlight(-1);
             }
         }
         else if (Input.GetKeyDown(KeyCode.D))
@@ -297,8 +296,7 @@ public class Player1Controller : MonoBehaviour
                 // Panggil SetSelectedItemHighlight untuk mengatur tampilan gambar select di UI Player
                 uI_Inventory.SetSelectedItemHighlight(selectedItemIndexPlayer);
 
-                // Nonaktifkan gambar select di UI Storage
-                uI_InventoryStorage.SetSelectedItemHighlight(-1);
+
             }
         }
         if (isItemSelected)
@@ -329,6 +327,7 @@ public class Player1Controller : MonoBehaviour
 
     public void HandleRetriveItemInput()
     {
+        uI_Inventory.SetSelectedItemHighlight(-1);
         if (Input.GetKeyDown(KeyCode.A))
         {
             if (selectedItemIndexStorage > 0)
@@ -338,8 +337,6 @@ public class Player1Controller : MonoBehaviour
                 // Panggil SetSelectedItemHighlight untuk mengatur tampilan gambar select di UI Storage
                 uI_InventoryStorage.SetSelectedItemHighlight(selectedItemIndexStorage);
 
-                // Nonaktifkan gambar select di UI Player
-                uI_Inventory.SetSelectedItemHighlight(-1);
             }
         }
         else if (Input.GetKeyDown(KeyCode.D))
@@ -351,8 +348,6 @@ public class Player1Controller : MonoBehaviour
                 // Panggil SetSelectedItemHighlight untuk mengatur tampilan gambar select di UI Storage
                 uI_InventoryStorage.SetSelectedItemHighlight(selectedItemIndexStorage);
 
-                // Nonaktifkan gambar select di UI Player
-                uI_Inventory.SetSelectedItemHighlight(-1);
             }
         }
         if (isItemSelected)
@@ -381,6 +376,18 @@ public class Player1Controller : MonoBehaviour
         }
     }
 
+    public bool IsInteracting()
+    {
+        if (!menuOpened)
+        {
+            if (Input.GetKeyDown(KeyCode.M))
+            {
+                playerInteract.DetectInteractableObjects();
+                ItemInteract itemInteract = playerInteract.GetInteractableObject() as ItemInteract;
+            }
+        }
+        return IsInteracting();
+    }
 
 
 }
