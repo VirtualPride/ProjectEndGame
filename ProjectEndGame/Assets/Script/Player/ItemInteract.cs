@@ -23,11 +23,8 @@ public class ItemInteract : MonoBehaviour, IInteractable
 
             if (item != null)
             {
-                // Periksa apakah player 1 lebih dekat atau player 2 lebih dekat dengan ItemInteract
-                float distanceToPlayer1 = Vector3.Distance(player1Controller.transform.position, transform.position);
-                float distanceToPlayer2 = Vector3.Distance(player2Controller.transform.position, transform.position);
 
-                if (distanceToPlayer1 < distanceToPlayer2)
+                if (Input.GetKeyDown(KeyCode.C))
                 {
                     // Jika player 1 lebih dekat, tambahkan item ke inventory Player 1
                     if (player1Controller != null && player1Controller.inventory.GetItemList().Count < 4)
@@ -35,7 +32,7 @@ public class ItemInteract : MonoBehaviour, IInteractable
                         player1Controller.AddItemToInventory(item);
                     }
                 }
-                else
+                else if (Input.GetKeyDown(KeyCode.M))
                 {
                     // Jika player 2 lebih dekat, tambahkan item ke inventory Player 2
                     if (player2Controller != null && player2Controller.inventoryPlayer2.GetItemList().Count < 4)

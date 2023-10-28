@@ -14,7 +14,6 @@ public class StorageInteract : MonoBehaviour, IInteractable
     private List<GameObject> buttonOpsiPlayer1 = new List<GameObject>();
     [SerializeField]
     private List<GameObject> buttonOpsiPlayer2 = new List<GameObject>();
-
     private int selectedButtonIndex = 0;
     [HideInInspector]
     public bool isSelecting = false;
@@ -53,16 +52,13 @@ public class StorageInteract : MonoBehaviour, IInteractable
         {
             panelOnPlayer2 = false;
         }
-
     }
     public void Interact()
     {
 
         Player1Controller player1Controller = FindObjectOfType<Player1Controller>();
         Player2Controller player2Controller = FindObjectOfType<Player2Controller>();
-        float distanceToPlayer1 = Vector3.Distance(player1Controller.transform.position, transform.position);
-        float distanceToPlayer2 = Vector3.Distance(player2Controller.transform.position, transform.position);
-        if (distanceToPlayer1 < distanceToPlayer2)
+        if (Input.GetKeyDown(KeyCode.C) && !panelOnPlayer2)
         {
             player1Controller.rb.velocity = Vector2.zero;
             player1Controller.lastPlayerPosition = player1Controller.transform.position;
@@ -71,7 +67,7 @@ public class StorageInteract : MonoBehaviour, IInteractable
             panelOnPlayer1 = true;
             panelPlayer1.SetActive(true);
         }
-        else
+        else if (Input.GetKeyDown(KeyCode.M) && !panelOnPlayer1)
         {
             player2Controller.rb.velocity = Vector2.zero;
             player2Controller.lastPlayerPosition = player2Controller.transform.position;
@@ -132,6 +128,7 @@ public class StorageInteract : MonoBehaviour, IInteractable
         player2Controller.OpenMenu();
         player2Controller.OpenTrade();
         panelPlayer2.SetActive(false);
+
     }
 
     private void UpdateButtonHighlight()
@@ -208,6 +205,7 @@ public class StorageInteract : MonoBehaviour, IInteractable
             panelPlayer1.SetActive(false);
             Player1Controller player1Controller = FindObjectOfType<Player1Controller>();
             player1Controller.playerMovementEnabled = true;
+
         }
 
     }
@@ -234,4 +232,5 @@ public class StorageInteract : MonoBehaviour, IInteractable
             player2Controller.playerMovementEnabled = true;
         }
     }
+
 }

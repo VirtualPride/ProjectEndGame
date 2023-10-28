@@ -31,15 +31,14 @@ public class Player2Controller : MonoBehaviour
     public bool ambilStorage = false;
     [SerializeField]
     public bool simpanStorage = false;
-
     private int selectedItemIndex = 0; // Indeks item yang sedang dipilih dalam inventori
     private int selectedItemIndexPlayer = 0; // Indeks item yang dipilih dalam UI Player
     private int selectedItemIndexStorage = 0;
 
 
     // Tombol-tombol pergerakan yang dapat dikustomisasi oleh pemain
-    public KeyCode moveUpKey = KeyCode.W;
-    public KeyCode moveDownKey = KeyCode.S;
+    public KeyCode moveUpKey = KeyCode.UpArrow;
+    public KeyCode moveDownKey = KeyCode.DownArrow;
     public KeyCode moveLeftKey = KeyCode.LeftArrow;
     public KeyCode moveRightKey = KeyCode.RightArrow;
 
@@ -66,7 +65,7 @@ public class Player2Controller : MonoBehaviour
     void Update()
     {
         // Mendapatkan input dari pemain
-        if (Input.GetKeyDown(KeyCode.N) && !tradeOpen && !storageInteract.panelOnPlayer1)
+        if (Input.GetKeyDown(KeyCode.N) && !tradeOpen && !storageInteract.panelOnPlayer2)
         {
             if (!menuOpened)
             {
@@ -377,6 +376,18 @@ public class Player2Controller : MonoBehaviour
         }
     }
 
+    public bool IsInteracting()
+    {
+        if (!menuOpened)
+        {
+            if (Input.GetKeyDown(KeyCode.M))
+            {
+                playerInteract.DetectInteractableObjects();
+                ItemInteract itemInteract = playerInteract.GetInteractableObject() as ItemInteract;
+            }
+        }
+        return IsInteracting();
+    }
 
 
 }
