@@ -24,9 +24,9 @@ public class Player2Controller : MonoBehaviour
     [HideInInspector]
     public Vector3 lastPlayerPosition;
     [SerializeField]
-    private UI_InventoryPlayer2 UI_InventoryPlayer2; // Referensi ke UI InventoryPlayer2
+    private UI_InventoryPlayer2 uI_InventoryPlayer2; // Referensi ke UI InventoryPlayer2
     [SerializeField]
-    private UI_InventoryStoragePlayer2 uI_InventoryStorage;
+    private UI_InventoryStorage2 uI_InventoryStorage2;
     [SerializeField]
     public bool ambilStorage = false;
     [SerializeField]
@@ -45,16 +45,27 @@ public class Player2Controller : MonoBehaviour
     private void Awake()
     {
         // Membuat instance baru dari InventoryPlayer2 dan menghubungkannya dengan inventoryPlayer2
+
         inventoryPlayer2 = new InventoryPlayer2(UseItem);
         inventoryStorage = new InventoryStorage(UseItem);
         playerInteract = GetComponent<PlayerInteract>();
 
+        GameObject inventoryStorageGO = GameObject.Find("UI_InventoryStorage2"); // Ganti "InventoryStorageGameObject" dengan nama GameObject yang sesuai
+        if (inventoryStorageGO != null)
+        {
+            // Tambahkan UI_InventoryStorage2 sebagai komponen pada game object
+            uI_InventoryStorage2 = inventoryStorageGO.AddComponent<UI_InventoryStorage2>();
+        }
+        else
+        {
+            Debug.LogError("GameObject 'InventoryStorageGameObject' not found.");
+        }
 
         // Mengatur inventoryPlayer2 UI dengan inventoryPlayer2 yang telah dibuat dan mengirimkan referensi ke Player2Controller
-        UI_InventoryPlayer2.SetInventory(inventoryPlayer2, this);
-        uI_InventoryStorage.SetInventory(inventoryStorage, this);
-        UI_InventoryPlayer2.gameObject.SetActive(false);
-        uI_InventoryStorage.gameObject.SetActive(false);
+        uI_InventoryPlayer2.SetInventory(inventoryPlayer2, this);
+        uI_InventoryStorage2.SetInventory(inventoryStorage, this);
+        uI_InventoryPlayer2.gameObject.SetActive(false);
+        uI_InventoryStorage2.gameObject.SetActive(false);
     }
 
     void Start()
@@ -64,8 +75,9 @@ public class Player2Controller : MonoBehaviour
 
     void Update()
     {
+
         // Mendapatkan input dari pemain
-        if (Input.GetKeyDown(KeyCode.N) && !tradeOpen && !storageInteract.panelOnPlayer2)
+        if (Input.GetKeyDown(KeyCode.N) && !tradeOpen && !storageInteract.panelOnPlayer1)
         {
             if (!menuOpened)
             {
@@ -160,27 +172,27 @@ public class Player2Controller : MonoBehaviour
         rb.velocity = Vector2.zero; // Hentikan pergerakan
         transform.position = lastPlayerPosition;
         menuOpened = true;
-        UI_InventoryPlayer2.gameObject.SetActive(true); // Mengaktifkan UI InventoryPlayer2
+        uI_InventoryPlayer2.gameObject.SetActive(true); // Mengaktifkan UI InventoryPlayer2
         playerMovementEnabled = false;
     }
 
     public void CloseMenu()
     {
         menuOpened = false;
-        UI_InventoryPlayer2.gameObject.SetActive(false);
+        uI_InventoryPlayer2.gameObject.SetActive(false);
         playerMovementEnabled = true;
     }
 
     public void OpenTrade()
     {
-        uI_InventoryStorage.gameObject.SetActive(true);
+        uI_InventoryStorage2.gameObject.SetActive(true);
         tradeOpen = true;
         isItemSelected = false;
     }
 
     public void CloseTrade()
     {
-        uI_InventoryStorage.gameObject.SetActive(false);
+        uI_InventoryStorage2.gameObject.SetActive(false);
         tradeOpen = false;
     }
 
@@ -218,7 +230,7 @@ public class Player2Controller : MonoBehaviour
                 Debug.Log("Selected item : " + inventoryPlayer2.GetItemAtIndex(selectedItemIndex).itemType);
 
                 // Panggil SetSelectedItemHighlight untuk mengatur tampilan gambar select
-                UI_InventoryPlayer2.SetSelectedItemHighlight(selectedItemIndex);
+                uI_InventoryPlayer2.SetSelectedItemHighlight(selectedItemIndex);
             }
         }
         else if (Input.GetKeyDown(KeyCode.RightArrow))
@@ -229,7 +241,7 @@ public class Player2Controller : MonoBehaviour
                 Debug.Log("Selected item : " + inventoryPlayer2.GetItemAtIndex(selectedItemIndex).itemType);
 
                 // Panggil SetSelectedItemHighlight untuk mengatur tampilan gambar select
-                UI_InventoryPlayer2.SetSelectedItemHighlight(selectedItemIndex);
+                uI_InventoryPlayer2.SetSelectedItemHighlight(selectedItemIndex);
             }
         }
 
@@ -273,7 +285,7 @@ public class Player2Controller : MonoBehaviour
 
     public void HandleSaveItemInput()
     {
-        uI_InventoryStorage.SetSelectedItemHighlight(-1);
+        uI_InventoryStorage2.SetSelectedItemHighlight(-1);
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
             if (selectedItemIndexPlayer > 0)
@@ -282,7 +294,7 @@ public class Player2Controller : MonoBehaviour
                 Debug.Log("Selected item : " + inventoryPlayer2.GetItemAtIndex(selectedItemIndexPlayer).itemType);
 
                 // Panggil SetSelectedItemHighlight untuk mengatur tampilan gambar select di UI Player
-                UI_InventoryPlayer2.SetSelectedItemHighlight(selectedItemIndexPlayer);
+                uI_InventoryPlayer2.SetSelectedItemHighlight(selectedItemIndexPlayer);
 
             }
         }
@@ -294,7 +306,7 @@ public class Player2Controller : MonoBehaviour
                 Debug.Log("Selected item : " + inventoryPlayer2.GetItemAtIndex(selectedItemIndexPlayer).itemType);
 
                 // Panggil SetSelectedItemHighlight untuk mengatur tampilan gambar select di UI Player
-                UI_InventoryPlayer2.SetSelectedItemHighlight(selectedItemIndexPlayer);
+                uI_InventoryPlayer2.SetSelectedItemHighlight(selectedItemIndexPlayer);
 
 
             }
@@ -327,7 +339,7 @@ public class Player2Controller : MonoBehaviour
 
     public void HandleRetriveItemInput()
     {
-        UI_InventoryPlayer2.SetSelectedItemHighlight(-1);
+        uI_InventoryPlayer2.SetSelectedItemHighlight(-1);
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
             if (selectedItemIndexStorage > 0)
@@ -335,7 +347,7 @@ public class Player2Controller : MonoBehaviour
                 selectedItemIndexStorage--;
 
                 // Panggil SetSelectedItemHighlight untuk mengatur tampilan gambar select di UI Storage
-                uI_InventoryStorage.SetSelectedItemHighlight(selectedItemIndexStorage);
+                uI_InventoryStorage2.SetSelectedItemHighlight(selectedItemIndexStorage);
 
             }
         }
@@ -346,7 +358,7 @@ public class Player2Controller : MonoBehaviour
                 selectedItemIndexStorage++;
 
                 // Panggil SetSelectedItemHighlight untuk mengatur tampilan gambar select di UI Storage
-                uI_InventoryStorage.SetSelectedItemHighlight(selectedItemIndexStorage);
+                uI_InventoryStorage2.SetSelectedItemHighlight(selectedItemIndexStorage);
 
             }
         }

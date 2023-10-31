@@ -4,24 +4,24 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class UI_InventoryStoragePlayer2 : MonoBehaviour
+public class UI_InventoryStorage2 : MonoBehaviour
 {
     private InventoryStorage inventoryStorage;
     private Transform itemSlotContainer;
     private Transform itemSlotTemplate;
 
-    private Player2Controller player2Controller;
+    private Player2Controller playerController;
 
     private void Awake()
     {
-        itemSlotContainer = transform.Find("ItemSlotContainerStoragePlayer2");
-        itemSlotTemplate = itemSlotContainer.Find("ItemSlotTemplateStoragePlayer2");
+        itemSlotContainer = transform.Find("ItemSlotContainerStorage2");
+        itemSlotTemplate = itemSlotContainer.Find("ItemSlotTemplateStorage2");
     }
 
-    public void SetInventory(InventoryStorage inventoryStorage, Player2Controller player2Controller)
+    public void SetInventory(InventoryStorage inventoryStorage, Player2Controller playerController)
     {
         this.inventoryStorage = inventoryStorage;
-        this.player2Controller = player2Controller; // Inisialisasi referensi ke Player2Controller
+        this.playerController = playerController; // Inisialisasi referensi ke Player2Controller
 
         // Menambahkan event handler untuk event OnItemListChanged dari InventoryPlayer2
         inventoryStorage.OnItemListChanged += Inventory_OnItemListChanged;
@@ -49,7 +49,7 @@ public class UI_InventoryStoragePlayer2 : MonoBehaviour
         int x = 0; // Koordinat X untuk item slot
         int y = 0; // Koordinat Y untuk item slot
         float itemSlotCellSize = 60f; // Ukuran setiap item slot
-        int selectedItemIndex = player2Controller.GetSelectedItemIndex(); // Ambil indeks item yang dipilih dari Player2Controller
+        int selectedItemIndex = playerController.GetSelectedItemIndex(); // Ambil indeks item yang dipilih dari Player2Controller
         int childIndex = 0; // Indeks untuk item slot
 
         // Iterasi melalui semua item dalam inventori dan membuat item slot baru untuk setiap item
@@ -105,5 +105,6 @@ public class UI_InventoryStoragePlayer2 : MonoBehaviour
             childIndex++;
         }
     }
+
 
 }
