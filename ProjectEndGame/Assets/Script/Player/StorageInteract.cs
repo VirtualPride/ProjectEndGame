@@ -6,21 +6,18 @@ using UnityEngine.UI;
 public class StorageInteract : MonoBehaviour, IInteractable
 {
     private string interactText = "Storage";
-    [SerializeField]
-    private GameObject panelPlayer1;
-    [SerializeField]
-    private GameObject panelPlayer2;
-    [SerializeField]
-    private List<GameObject> buttonOpsiPlayer1 = new List<GameObject>();
-    [SerializeField]
-    private List<GameObject> buttonOpsiPlayer2 = new List<GameObject>();
-    private int selectedButtonIndex = 0;
-    [HideInInspector]
-    public bool isSelecting = false;
-    [HideInInspector]
-    public bool panelOnPlayer1 = false;
-    [HideInInspector]
-    public bool panelOnPlayer2 = false;
+    [SerializeField] private GameObject panelPlayer1;
+    [SerializeField] private GameObject panelPlayer2;
+    [SerializeField] private List<GameObject> buttonOpsiPlayer1 = new List<GameObject>();
+    [SerializeField] private List<GameObject> buttonOpsiPlayer2 = new List<GameObject>(); private int selectedButtonIndex = 0;
+    [HideInInspector] public bool isSelecting = false;
+    [HideInInspector] public bool panelOnPlayer1 = false;
+    [HideInInspector] public bool panelOnPlayer2 = false;
+    [SerializeField] private Player1Controller player1Controller;
+    [SerializeField] private Player2Controller player2Controller;
+    [HideInInspector] public InventoryStorage inventoryStorage;
+    private int selectedItemIndex;
+
 
     public string GetInteractText()
     {
@@ -29,6 +26,7 @@ public class StorageInteract : MonoBehaviour, IInteractable
 
     private void Awake()
     {
+        inventoryStorage = new InventoryStorage(UseItem);
         panelPlayer1.SetActive(false);
         panelPlayer2.SetActive(false);
     }
@@ -55,9 +53,6 @@ public class StorageInteract : MonoBehaviour, IInteractable
     }
     public void Interact()
     {
-
-        Player1Controller player1Controller = FindObjectOfType<Player1Controller>();
-        Player2Controller player2Controller = FindObjectOfType<Player2Controller>();
         if (Input.GetKeyDown(KeyCode.C) && !panelOnPlayer2)
         {
             player1Controller.rb.velocity = Vector2.zero;
@@ -88,7 +83,6 @@ public class StorageInteract : MonoBehaviour, IInteractable
 
     public void ambilBtnPlayer1()
     {
-        Player1Controller player1Controller = FindObjectOfType<Player1Controller>();
         player1Controller.lastPlayerPosition = player1Controller.transform.position;
         player1Controller.ambilStorage = true;
         player1Controller.simpanStorage = false;
@@ -99,7 +93,6 @@ public class StorageInteract : MonoBehaviour, IInteractable
 
     public void simpanBtnPlayer1()
     {
-        Player1Controller player1Controller = FindObjectOfType<Player1Controller>();
         player1Controller.lastPlayerPosition = player1Controller.transform.position;
         player1Controller.ambilStorage = false;
         player1Controller.simpanStorage = true;
@@ -110,7 +103,6 @@ public class StorageInteract : MonoBehaviour, IInteractable
 
     public void ambilBtnPlayer2()
     {
-        Player2Controller player2Controller = FindObjectOfType<Player2Controller>();
         player2Controller.lastPlayerPosition = player2Controller.transform.position;
         player2Controller.ambilStorage = true;
         player2Controller.simpanStorage = false;
@@ -121,7 +113,6 @@ public class StorageInteract : MonoBehaviour, IInteractable
 
     public void simpanBtnPlayer2()
     {
-        Player2Controller player2Controller = FindObjectOfType<Player2Controller>();
         player2Controller.lastPlayerPosition = player2Controller.transform.position;
         player2Controller.ambilStorage = false;
         player2Controller.simpanStorage = true;
@@ -231,6 +222,16 @@ public class StorageInteract : MonoBehaviour, IInteractable
             Player2Controller player2Controller = FindObjectOfType<Player2Controller>();
             player2Controller.playerMovementEnabled = true;
         }
+    }
+
+    private void UseItem(Item item)
+    {
+
+    }
+    public int GetSelectedItemIndex()
+    {
+        selectedItemIndex = player1Controller.GetSelectedItemIndex();
+        return selectedItemIndex;
     }
 
 }

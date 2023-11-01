@@ -46,13 +46,12 @@ public class Player1Controller : MonoBehaviour
     {
         // Membuat instance baru dari InventoryPlayer2 dan menghubungkannya dengan inventory
         inventory = new Inventory(UseItem);
-        inventoryStorage = new InventoryStorage(UseItem);
         playerInteract = GetComponent<PlayerInteract>();
 
 
         // Mengatur inventory UI dengan inventory yang telah dibuat dan mengirimkan referensi ke Player2Controller
         uI_Inventory.SetInventory(inventory, this);
-        uI_InventoryStorage.SetInventory(inventoryStorage, this);
+        uI_InventoryStorage.SetInventory(storageInteract.inventoryStorage, storageInteract);
         uI_Inventory.gameObject.SetActive(false);
         uI_InventoryStorage.gameObject.SetActive(false);
     }
@@ -308,7 +307,7 @@ public class Player1Controller : MonoBehaviour
 
                 if (selectedItemAt != null)
                 {
-                    inventoryStorage.AddItem(selectedItemAt); // Menggunakan item yang dipilih
+                    storageInteract.inventoryStorage.AddItem(selectedItemAt); // Menggunakan item yang dipilih
                     inventory.RemoveItem(selectedItemAt);
 
 
@@ -341,7 +340,7 @@ public class Player1Controller : MonoBehaviour
         }
         else if (Input.GetKeyDown(KeyCode.D))
         {
-            if (selectedItemIndexStorage < inventoryStorage.GetItemList().Count - 1)
+            if (selectedItemIndexStorage < storageInteract.inventoryStorage.GetItemList().Count - 1)
             {
                 selectedItemIndexStorage++;
 
@@ -355,12 +354,12 @@ public class Player1Controller : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.C) && storageInteract.isSelecting == false && inventory.GetItemList().Count < 4 && tradeOpen)
             {
                 // Mendapatkan item yang sedang dipilih dari inventory UI Storage
-                Item selectedItemAt = inventoryStorage.GetItemAtIndex(selectedItemIndexStorage);
+                Item selectedItemAt = storageInteract.inventoryStorage.GetItemAtIndex(selectedItemIndexStorage);
 
                 if (selectedItemAt != null)
                 {
                     inventory.AddItem(selectedItemAt);
-                    inventoryStorage.RemoveItem(selectedItemAt); // Menggunakan item yang dipilih
+                    storageInteract.inventoryStorage.RemoveItem(selectedItemAt); // Menggunakan item yang dipilih
 
 
                 }

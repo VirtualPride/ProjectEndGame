@@ -10,7 +10,8 @@ public class UI_InventoryStorage2 : MonoBehaviour
     private Transform itemSlotContainer;
     private Transform itemSlotTemplate;
 
-    private Player2Controller playerController;
+
+    private StorageInteract storageInteract;
 
     private void Awake()
     {
@@ -18,10 +19,10 @@ public class UI_InventoryStorage2 : MonoBehaviour
         itemSlotTemplate = itemSlotContainer.Find("ItemSlotTemplateStorage2");
     }
 
-    public void SetInventory(InventoryStorage inventoryStorage, Player2Controller playerController)
+    public void SetInventory(InventoryStorage inventoryStorage, StorageInteract storageInteract)
     {
         this.inventoryStorage = inventoryStorage;
-        this.playerController = playerController; // Inisialisasi referensi ke Player2Controller
+        this.storageInteract = storageInteract; // Inisialisasi referensi ke Player2Controller
 
         // Menambahkan event handler untuk event OnItemListChanged dari InventoryPlayer2
         inventoryStorage.OnItemListChanged += Inventory_OnItemListChanged;
@@ -49,7 +50,7 @@ public class UI_InventoryStorage2 : MonoBehaviour
         int x = 0; // Koordinat X untuk item slot
         int y = 0; // Koordinat Y untuk item slot
         float itemSlotCellSize = 60f; // Ukuran setiap item slot
-        int selectedItemIndex = playerController.GetSelectedItemIndex(); // Ambil indeks item yang dipilih dari Player2Controller
+        int selectedItemIndex = storageInteract.GetSelectedItemIndex(); // Ambil indeks item yang dipilih dari Player2Controller
         int childIndex = 0; // Indeks untuk item slot
 
         // Iterasi melalui semua item dalam inventori dan membuat item slot baru untuk setiap item
