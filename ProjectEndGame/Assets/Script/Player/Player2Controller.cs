@@ -5,13 +5,13 @@ using UnityEngine;
 public class Player2Controller : MonoBehaviour
 {
     public float speed = 5.0f; // Kecepatan karakter
-    [HideInInspector]
-    public Rigidbody2D rb;
+    [HideInInspector] public Rigidbody2D rb;
     private bool menuOpened = false;
     // Status menu inventoryPlayer2
     public InventoryPlayer2 inventoryPlayer2; // Referensi ke objek InventoryPlayer2
     public InventoryStorage inventoryStorage;
     public StorageInteract storageInteract;
+    public InventoryStorageManager inventoryStorageManager;
     private Item.ItemType keyDoorType;
     private bool nearDoor;
     private bool canOpenDoor;
@@ -19,18 +19,12 @@ public class Player2Controller : MonoBehaviour
     private bool isItemSelected = false;
     private KeyDoor currentKeyDoor; // Menyimpan referensi ke pintu saat ini yang dapat dibuka
     private PlayerInteract playerInteract;
-    [HideInInspector]
-    public bool playerMovementEnabled = true; // Status pergerakan karakter
-    [HideInInspector]
-    public Vector3 lastPlayerPosition;
-    [SerializeField]
-    private UI_InventoryPlayer2 uI_InventoryPlayer2; // Referensi ke UI InventoryPlayer2
-    [SerializeField]
-    private UI_InventoryStorage2 uI_InventoryStorage2;
-    [SerializeField]
-    public bool ambilStorage = false;
-    [SerializeField]
-    public bool simpanStorage = false;
+    [HideInInspector] public bool playerMovementEnabled = true; // Status pergerakan karakter
+    [HideInInspector] public Vector3 lastPlayerPosition;
+    [SerializeField] private UI_InventoryPlayer2 uI_InventoryPlayer2; // Referensi ke UI InventoryPlayer2
+    [SerializeField] private UI_InventoryStorage2 uI_InventoryStorage2;
+    [SerializeField] public bool ambilStorage = false;
+    [SerializeField] public bool simpanStorage = false;
     private int selectedItemIndex = 0; // Indeks item yang sedang dipilih dalam inventori
     private int selectedItemIndexPlayer = 0; // Indeks item yang dipilih dalam UI Player
     private int selectedItemIndexStorage = 0;
@@ -62,7 +56,7 @@ public class Player2Controller : MonoBehaviour
 
         // Mengatur inventoryPlayer2 UI dengan inventoryPlayer2 yang telah dibuat dan mengirimkan referensi ke Player2Controller
         uI_InventoryPlayer2.SetInventory(inventoryPlayer2, this);
-        uI_InventoryStorage2.SetInventory(storageInteract.inventoryStorage, storageInteract);
+        uI_InventoryStorage2.SetInventory(inventoryStorageManager.inventoryStorage, inventoryStorageManager);
         uI_InventoryPlayer2.gameObject.SetActive(false);
         uI_InventoryStorage2.gameObject.SetActive(false);
     }
@@ -319,7 +313,7 @@ public class Player2Controller : MonoBehaviour
 
                 if (selectedItemAt != null)
                 {
-                    storageInteract.inventoryStorage.AddItem(selectedItemAt); // Menggunakan item yang dipilih
+                    inventoryStorageManager.inventoryStorage.AddItem(selectedItemAt); // Menggunakan item yang dipilih
                     inventoryPlayer2.RemoveItem(selectedItemAt);
 
 
@@ -352,7 +346,7 @@ public class Player2Controller : MonoBehaviour
         }
         else if (Input.GetKeyDown(KeyCode.RightArrow))
         {
-            if (selectedItemIndexStorage < storageInteract.inventoryStorage.GetItemList().Count - 1)
+            if (selectedItemIndexStorage < inventoryStorageManager.inventoryStorage.GetItemList().Count - 1)
             {
                 selectedItemIndexStorage++;
 
@@ -366,12 +360,12 @@ public class Player2Controller : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.M) && storageInteract.isSelecting == false && inventoryPlayer2.GetItemList().Count < 4 && tradeOpen)
             {
                 // Mendapatkan item yang sedang dipilih dari inventoryPlayer2 UI Storage
-                Item selectedItemAt = storageInteract.inventoryStorage.GetItemAtIndex(selectedItemIndexStorage);
+                Item selectedItemAt = inventoryStorageManager.inventoryStorage.GetItemAtIndex(selectedItemIndexStorage);
 
                 if (selectedItemAt != null)
                 {
                     inventoryPlayer2.AddItem(selectedItemAt);
-                    storageInteract.inventoryStorage.RemoveItem(selectedItemAt); // Menggunakan item yang dipilih
+                    inventoryStorageManager.inventoryStorage.RemoveItem(selectedItemAt); // Menggunakan item yang dipilih
 
 
                 }

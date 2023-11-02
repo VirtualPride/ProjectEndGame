@@ -15,9 +15,6 @@ public class StorageInteract : MonoBehaviour, IInteractable
     [HideInInspector] public bool panelOnPlayer2 = false;
     [SerializeField] private Player1Controller player1Controller;
     [SerializeField] private Player2Controller player2Controller;
-    [HideInInspector] public InventoryStorage inventoryStorage;
-    private int selectedItemIndex;
-
 
     public string GetInteractText()
     {
@@ -26,7 +23,7 @@ public class StorageInteract : MonoBehaviour, IInteractable
 
     private void Awake()
     {
-        inventoryStorage = new InventoryStorage(UseItem);
+
         panelPlayer1.SetActive(false);
         panelPlayer2.SetActive(false);
     }
@@ -228,10 +225,6 @@ public class StorageInteract : MonoBehaviour, IInteractable
     {
 
     }
-    public int GetSelectedItemIndex()
-    {
-        selectedItemIndex = player1Controller.GetSelectedItemIndex();
-        return selectedItemIndex;
-    }
+
 
 }

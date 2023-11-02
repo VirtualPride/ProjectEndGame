@@ -1760,6 +1760,8 @@ MonoBehaviour:
   isSelecting: 0
   panelOnPlayer1: 0
   panelOnPlayer2: 0
+  player1Controller: {fileID: 2134094379}
+  player2Controller: {fileID: 747084278}
 --- !u!212 &712541176
 SpriteRenderer:
   m_ObjectHideFlags: 0
