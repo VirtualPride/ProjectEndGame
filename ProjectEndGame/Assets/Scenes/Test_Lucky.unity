@@ -1623,6 +1623,53 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44a0b2f4852e43e47b21a950db9e1a94, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &671448874
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 671448876}
+  - component: {fileID: 671448875}
+  m_Layer: 0
+  m_Name: InventoryStorageManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &671448875
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 671448874}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e379634c0a81c294994f0557de693abe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player1Controller: {fileID: 2134094379}
+  player2Controller: {fileID: 747084278}
+  storageInteract: {fileID: 0}
+--- !u!4 &671448876
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 671448874}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 6.0559916, y: 4.2903047, z: -8.036521}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 15
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &673572784
 GameObject:
   m_ObjectHideFlags: 0
@@ -2282,6 +2329,7 @@ MonoBehaviour:
   speed: 5
   rb: {fileID: 0}
   storageInteract: {fileID: 712541175}
+  inventoryStorageManager: {fileID: 671448875}
   playerMovementEnabled: 1
   lastPlayerPosition: {x: 0, y: 0, z: 0}
   uI_InventoryPlayer2: {fileID: 255214737}
@@ -6948,6 +6996,7 @@ MonoBehaviour:
   speed: 5
   rb: {fileID: 0}
   storageInteract: {fileID: 712541175}
+  inventoryStorageManager: {fileID: 671448875}
   playerMovementEnabled: 1
   lastPlayerPosition: {x: 0, y: 0, z: 0}
   uI_Inventory: {fileID: 1876450142}

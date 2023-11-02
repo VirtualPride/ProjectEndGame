@@ -80,42 +80,34 @@ public class StorageInteract : MonoBehaviour, IInteractable
 
     public void ambilBtnPlayer1()
     {
-        player1Controller.lastPlayerPosition = player1Controller.transform.position;
+
         player1Controller.ambilStorage = true;
         player1Controller.simpanStorage = false;
-        player1Controller.OpenMenu();
-        player1Controller.OpenTrade();
-        panelPlayer1.SetActive(false);
+        Player1OpenTrade();
     }
 
     public void simpanBtnPlayer1()
     {
-        player1Controller.lastPlayerPosition = player1Controller.transform.position;
+
         player1Controller.ambilStorage = false;
         player1Controller.simpanStorage = true;
-        player1Controller.OpenMenu();
-        player1Controller.OpenTrade();
-        panelPlayer1.SetActive(false);
+        Player1OpenTrade();
     }
 
     public void ambilBtnPlayer2()
     {
-        player2Controller.lastPlayerPosition = player2Controller.transform.position;
+
         player2Controller.ambilStorage = true;
         player2Controller.simpanStorage = false;
-        player2Controller.OpenMenu();
-        player2Controller.OpenTrade();
-        panelPlayer2.SetActive(false);
+        Player2OpenTrade();
     }
 
     public void simpanBtnPlayer2()
     {
-        player2Controller.lastPlayerPosition = player2Controller.transform.position;
+
         player2Controller.ambilStorage = false;
         player2Controller.simpanStorage = true;
-        player2Controller.OpenMenu();
-        player2Controller.OpenTrade();
-        panelPlayer2.SetActive(false);
+        Player2OpenTrade();
 
     }
 
@@ -221,9 +213,20 @@ public class StorageInteract : MonoBehaviour, IInteractable
         }
     }
 
-    private void UseItem(Item item)
+    private void Player1OpenTrade()
     {
+        player1Controller.lastPlayerPosition = player1Controller.transform.position;
+        player1Controller.OpenMenu();
+        player1Controller.OpenTrade();
+        panelPlayer1.SetActive(false);
+    }
 
+    private void Player2OpenTrade()
+    {
+        player2Controller.lastPlayerPosition = player2Controller.transform.position;
+        player2Controller.OpenMenu();
+        player2Controller.OpenTrade();
+        panelPlayer2.SetActive(false);
     }
 
 
