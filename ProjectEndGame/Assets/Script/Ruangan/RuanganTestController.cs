@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class RuanganTestController : MonoBehaviour
 {
+    [HideInInspector] public bool player1InRoom;
+    [HideInInspector] public bool player2InRoom;
     public BoxCollider2D roomCollider; // Anda harus menetapkan BoxCollider2D ini dalam inspektor
-
-
     public Camera Player1RuanganCam;
     public Camera Player2RuanganCam;
     public Camera RuanganCamGabungan;
@@ -50,10 +50,10 @@ public class RuanganTestController : MonoBehaviour
     private void cekRuangan()
     {
         // Mengecek apakah posisi Player1 berada dalam collider ruangan
-        bool player1InRoom = roomCollider.OverlapPoint(player1.transform.position);
+        player1InRoom = roomCollider.OverlapPoint(player1.transform.position);
 
         // Mengecek apakah posisi Player2 berada dalam collider ruangan
-        bool player2InRoom = roomCollider.OverlapPoint(player2.transform.position);
+        player2InRoom = roomCollider.OverlapPoint(player2.transform.position);
 
         // Mengatur kamera sesuai dengan status pemain dalam ruangan
         if (player1InRoom)
