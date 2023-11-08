@@ -4,49 +4,38 @@ using UnityEngine;
 
 public class Player2Controller : MonoBehaviour
 {
-    public float speed = 5.0f; // Kecepatan karakter
+    public float speed = 5.0f;
     [HideInInspector] public Rigidbody2D rb;
     private bool menuOpened = false;
-    // Status menu inventoryPlayer2
-    public InventoryPlayer2 inventoryPlayer2; // Referensi ke objek InventoryPlayer2
-    public InventoryStorage inventoryStorage;
+    public InventoryPlayer2 inventoryPlayer2;
     public StorageInteract storageInteract;
     public InventoryStorageManager inventoryStorageManager;
+    public Player2State Player2State;
     private Item.ItemType keyDoorType;
     private bool nearDoor;
     private bool canOpenDoor;
     private bool tradeOpen;
     private bool isItemSelected = false;
-    private KeyDoor currentKeyDoor; // Menyimpan referensi ke pintu saat ini yang dapat dibuka
+    private KeyDoor currentKeyDoor;
     private PlayerInteract playerInteract;
-    [HideInInspector] public bool playerMovementEnabled = true; // Status pergerakan karakter
+    [HideInInspector] public bool playerMovementEnabled = true;
     [HideInInspector] public Vector3 lastPlayerPosition;
-    [SerializeField] private UI_InventoryPlayer2 uI_InventoryPlayer2; // Referensi ke UI InventoryPlayer2
+    [SerializeField] private UI_InventoryPlayer2 uI_InventoryPlayer2;
     [SerializeField] private UI_InventoryStorage2 uI_InventoryStorage2;
-    [SerializeField] public bool ambilStorage = false;
-    [SerializeField] public bool simpanStorage = false;
-    private int selectedItemIndex = 0; // Indeks item yang sedang dipilih dalam inventori
-    private int selectedItemIndexPlayer = 0; // Indeks item yang dipilih dalam UI Player
+    private int selectedItemIndex = 0;
+    private int selectedItemIndexPlayer = 0;
     private int selectedItemIndexStorage = 0;
-
-
-    // Tombol-tombol pergerakan yang dapat dikustomisasi oleh pemain
     public KeyCode moveUpKey = KeyCode.UpArrow;
-    public KeyCode moveDownKey = KeyCode.DownArrow;
+    public KeyCode moveDownKey = KeyCode.S;
     public KeyCode moveLeftKey = KeyCode.LeftArrow;
     public KeyCode moveRightKey = KeyCode.RightArrow;
 
     private void Awake()
     {
-        // Membuat instance baru dari InventoryPlayer2 dan menghubungkannya dengan inventoryPlayer2
-
         inventoryPlayer2 = new InventoryPlayer2(UseItem);
-        playerInteract = GetComponent<PlayerInteract>();
-
-        GameObject inventoryStorageGO = GameObject.Find("UI_InventoryStorage2"); // Ganti "InventoryStorageGameObject" dengan nama GameObject yang sesuai
+        GameObject inventoryStorageGO = GameObject.Find("UI_InventoryStorage2");
         if (inventoryStorageGO != null)
         {
-            // Tambahkan UI_InventoryStorage2 sebagai komponen pada game object
             uI_InventoryStorage2 = inventoryStorageGO.AddComponent<UI_InventoryStorage2>();
         }
         else
@@ -54,63 +43,65 @@ public class Player2Controller : MonoBehaviour
             Debug.LogError("GameObject 'InventoryStorageGameObject' not found.");
         }
 
-        // Mengatur inventoryPlayer2 UI dengan inventoryPlayer2 yang telah dibuat dan mengirimkan referensi ke Player2Controller
+        playerInteract = GetComponent<PlayerInteract>();
         uI_InventoryPlayer2.SetInventory(inventoryPlayer2, this);
         uI_InventoryStorage2.SetInventory(inventoryStorageManager.inventoryStorage, inventoryStorageManager);
         uI_InventoryPlayer2.gameObject.SetActive(false);
         uI_InventoryStorage2.gameObject.SetActive(false);
+
+
     }
 
     void Start()
     {
-        rb = GetComponent<Rigidbody2D>(); // Mengambil komponen Rigidbody2D dari GameObject
+        rb = GetComponent<Rigidbody2D>();
+        Player2State = Player2State.Idle;
     }
 
     void Update()
     {
-
-        // Mendapatkan input dari pemain
-        if (Input.GetKeyDown(KeyCode.N) && !tradeOpen && !storageInteract.panelOnPlayer1)
+        if (Input.GetKeyDown(KeyCode.N) && Player2State == Player2State.Idle && !storageInteract.panelOnPlayer1)
         {
-            if (!menuOpened)
-            {
-                lastPlayerPosition = transform.position;
-                OpenMenu();
-            }
-            else
-            {
-                CloseMenu();
-            }
+            lastPlayerPosition = transform.position;
+            Player2State = Player2State.OpenMenu;
+            OpenMenu();
+        }
+        else if (Input.GetKeyDown(KeyCode.N) && Player2State == Player2State.OpenMenu)
+        {
+            Player2State = Player2State.Idle;
+            CloseMenu();
         }
 
-        if (playerMovementEnabled && !menuOpened)
+        if (Player2State == Player2State.Idle)
         {
             HandleMovementInput();
         }
-        else if (!playerMovementEnabled && menuOpened && !tradeOpen)
+        else if (Player2State == Player2State.OpenMenu)
         {
             HandleInventoryInput();
         }
-        if (!playerMovementEnabled && menuOpened && tradeOpen && simpanStorage)
+        if (Player2State == Player2State.SaveItem)
         {
             HandleSaveItemInput();
-            if (Input.GetKeyDown(KeyCode.N))
+            if (Input.GetKeyDown(KeyCode.N) && Player2State == Player2State.SaveItem)
             {
+                Player2State = Player2State.Idle;
                 CloseTrade();
                 CloseMenu();
             }
         }
-        else if (!playerMovementEnabled && menuOpened && tradeOpen && ambilStorage)
+        else if (Player2State == Player2State.RetriveItem)
         {
             HandleRetriveItemInput();
-            if (Input.GetKeyDown(KeyCode.N))
+            if (Input.GetKeyDown(KeyCode.N) && Player2State == Player2State.RetriveItem)
             {
+                Player2State = Player2State.Idle;
                 CloseTrade();
                 CloseMenu();
             }
         }
 
-        if (!menuOpened)
+        if (Player2State == Player2State.Idle)
         {
             if (Input.GetKeyDown(KeyCode.M))
             {
@@ -118,12 +109,12 @@ public class Player2Controller : MonoBehaviour
                 ItemInteract itemInteract = playerInteract.GetInteractableObject() as ItemInteract;
             }
         }
+        HandleState();
 
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-
         KeyDoor keyDoor = other.gameObject.GetComponent<KeyDoor>();
         if (keyDoor != null)
         {
@@ -162,18 +153,14 @@ public class Player2Controller : MonoBehaviour
 
     public void OpenMenu()
     {
-        rb.velocity = Vector2.zero; // Hentikan pergerakan
-        transform.position = lastPlayerPosition;
         menuOpened = true;
-        uI_InventoryPlayer2.gameObject.SetActive(true); // Mengaktifkan UI InventoryPlayer2
-        playerMovementEnabled = false;
+        uI_InventoryPlayer2.gameObject.SetActive(true); // Mengaktifkan UI inventoryPlayer2
     }
 
     public void CloseMenu()
     {
         menuOpened = false;
         uI_InventoryPlayer2.gameObject.SetActive(false);
-        playerMovementEnabled = true;
     }
 
     public void OpenTrade()
@@ -202,13 +189,10 @@ public class Player2Controller : MonoBehaviour
             moveHorizontal = -1f;
         if (Input.GetKey(moveRightKey))
             moveHorizontal = 1f;
-
-        // Menghitung vektor pergerakan
         Vector2 movement = new Vector2(moveHorizontal, moveVertical);
 
         if (playerMovementEnabled)
         {
-            // Mengatur kecepatan karakter
             rb.velocity = movement.normalized * speed;
         }
     }
@@ -220,9 +204,6 @@ public class Player2Controller : MonoBehaviour
             if (selectedItemIndex > 0)
             {
                 selectedItemIndex--;
-                Debug.Log("Selected item : " + inventoryPlayer2.GetItemAtIndex(selectedItemIndex).itemType);
-
-                // Panggil SetSelectedItemHighlight untuk mengatur tampilan gambar select
                 uI_InventoryPlayer2.SetSelectedItemHighlight(selectedItemIndex);
             }
         }
@@ -231,22 +212,16 @@ public class Player2Controller : MonoBehaviour
             if (selectedItemIndex < inventoryPlayer2.GetItemList().Count - 1)
             {
                 selectedItemIndex++;
-                Debug.Log("Selected item : " + inventoryPlayer2.GetItemAtIndex(selectedItemIndex).itemType);
-
-                // Panggil SetSelectedItemHighlight untuk mengatur tampilan gambar select
                 uI_InventoryPlayer2.SetSelectedItemHighlight(selectedItemIndex);
             }
         }
-
-        // Memeriksa input untuk menggunakan item dengan tombol "M"
         if (Input.GetKeyDown(KeyCode.M))
         {
-            // Mendapatkan item yang sedang dipilih
             Item selectedItemAt = inventoryPlayer2.GetItemAtIndex(selectedItemIndex);
 
             if (selectedItemAt != null)
             {
-                inventoryPlayer2.UseItem(selectedItemAt); // Menggunakan item yang dipilih
+                inventoryPlayer2.UseItem(selectedItemAt);
             }
         }
     }
@@ -262,12 +237,10 @@ public class Player2Controller : MonoBehaviour
                 canOpenDoor = false;
                 currentKeyDoor = null;
             }
-
         }
         else
         {
             canOpenDoor = false;
-            Debug.Log("Pergi kedekat pintu");
         }
     }
 
@@ -284,11 +257,7 @@ public class Player2Controller : MonoBehaviour
             if (selectedItemIndexPlayer > 0)
             {
                 selectedItemIndexPlayer--;
-                Debug.Log("Selected item : " + inventoryPlayer2.GetItemAtIndex(selectedItemIndexPlayer).itemType);
-
-                // Panggil SetSelectedItemHighlight untuk mengatur tampilan gambar select di UI Player
                 uI_InventoryPlayer2.SetSelectedItemHighlight(selectedItemIndexPlayer);
-
             }
         }
         else if (Input.GetKeyDown(KeyCode.RightArrow))
@@ -296,33 +265,23 @@ public class Player2Controller : MonoBehaviour
             if (selectedItemIndexPlayer < inventoryPlayer2.GetItemList().Count - 1)
             {
                 selectedItemIndexPlayer++;
-                Debug.Log("Selected item : " + inventoryPlayer2.GetItemAtIndex(selectedItemIndexPlayer).itemType);
-
-                // Panggil SetSelectedItemHighlight untuk mengatur tampilan gambar select di UI Player
                 uI_InventoryPlayer2.SetSelectedItemHighlight(selectedItemIndexPlayer);
-
-
             }
         }
         if (isItemSelected)
         {
             if (Input.GetKeyDown(KeyCode.M) && storageInteract.isSelecting == false && tradeOpen)
             {
-                // Mendapatkan item yang sedang dipilih dari inventoryPlayer2 UI Player
                 Item selectedItemAt = inventoryPlayer2.GetItemAtIndex(selectedItemIndexPlayer);
-
                 if (selectedItemAt != null)
                 {
-                    inventoryStorageManager.inventoryStorage.AddItem(selectedItemAt); // Menggunakan item yang dipilih
+                    inventoryStorageManager.inventoryStorage.AddItem(selectedItemAt);
                     inventoryPlayer2.RemoveItem(selectedItemAt);
-
-
                 }
             }
         }
         else
         {
-            // Jika pemain belum memilih item, izinkan mereka untuk memilih item terlebih dahulu.
             if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.RightArrow) && tradeOpen)
             {
                 isItemSelected = true;
@@ -338,8 +297,6 @@ public class Player2Controller : MonoBehaviour
             if (selectedItemIndexStorage > 0)
             {
                 selectedItemIndexStorage--;
-
-                // Panggil SetSelectedItemHighlight untuk mengatur tampilan gambar select di UI Storage
                 uI_InventoryStorage2.SetSelectedItemHighlight(selectedItemIndexStorage);
 
             }
@@ -349,8 +306,6 @@ public class Player2Controller : MonoBehaviour
             if (selectedItemIndexStorage < inventoryStorageManager.inventoryStorage.GetItemList().Count - 1)
             {
                 selectedItemIndexStorage++;
-
-                // Panggil SetSelectedItemHighlight untuk mengatur tampilan gambar select di UI Storage
                 uI_InventoryStorage2.SetSelectedItemHighlight(selectedItemIndexStorage);
 
             }
@@ -359,21 +314,17 @@ public class Player2Controller : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.M) && storageInteract.isSelecting == false && inventoryPlayer2.GetItemList().Count < 4 && tradeOpen)
             {
-                // Mendapatkan item yang sedang dipilih dari inventoryPlayer2 UI Storage
                 Item selectedItemAt = inventoryStorageManager.inventoryStorage.GetItemAtIndex(selectedItemIndexStorage);
 
                 if (selectedItemAt != null)
                 {
                     inventoryPlayer2.AddItem(selectedItemAt);
-                    inventoryStorageManager.inventoryStorage.RemoveItem(selectedItemAt); // Menggunakan item yang dipilih
-
-
+                    inventoryStorageManager.inventoryStorage.RemoveItem(selectedItemAt);
                 }
             }
         }
         else
         {
-            // Jika pemain belum memilih item, izinkan mereka untuk memilih item terlebih dahulu.
             if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.RightArrow) && tradeOpen)
             {
                 isItemSelected = true;
@@ -393,6 +344,36 @@ public class Player2Controller : MonoBehaviour
         }
         return IsInteracting();
     }
+
+    private void HandleState()
+    {
+        switch (Player2State)
+        {
+            case Player2State.Idle:
+                playerMovementEnabled = true;
+                break;
+            case Player2State.OpenMenu:
+                StopPlayer();
+                break;
+            case Player2State.SaveItem:
+                StopPlayer();
+                break;
+            case Player2State.RetriveItem:
+                StopPlayer();
+                break;
+            case Player2State.Interact:
+                StopPlayer();
+                break;
+        }
+    }
+
+    private void StopPlayer()
+    {
+        rb.velocity = Vector2.zero;
+        transform.position = lastPlayerPosition;
+        playerMovementEnabled = false;
+    }
+
 
 
 }

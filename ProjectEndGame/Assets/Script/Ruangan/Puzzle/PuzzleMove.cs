@@ -8,6 +8,8 @@ public class PuzzleMove : MonoBehaviour
     [SerializeField] private PuzzleTesInteract puzzleTesInteract;
     [HideInInspector] public bool isMoving = false;
     [SerializeField] private Rigidbody2D rb;
+ 
+    private bool isFinish = false;
     public float MoveSpeed = 2.0f;
     private void Awake()
     {

@@ -2480,12 +2480,11 @@ MonoBehaviour:
   rb: {fileID: 0}
   storageInteract: {fileID: 712541175}
   inventoryStorageManager: {fileID: 671448875}
+  Player2State: 0
   playerMovementEnabled: 1
   lastPlayerPosition: {x: 0, y: 0, z: 0}
   uI_InventoryPlayer2: {fileID: 255214737}
   uI_InventoryStorage2: {fileID: 869085452}
-  ambilStorage: 0
-  simpanStorage: 0
   moveUpKey: 273
   moveDownKey: 274
   moveLeftKey: 276
@@ -3137,11 +3136,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44e4a71b804524c4ab15f15bc813dd7c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  player1Controller: {fileID: 2134094379}
+  player2Controller: {fileID: 747084278}
   puzzleGerakCamPlayer1: {fileID: 1739919867}
   puzzleGerakCamPlayer2: {fileID: 353109048}
   ruanganTestController: {fileID: 1605479852}
   player1Move: 0
   player2Move: 0
+  playerInteractUI: {fileID: 1291396364}
 --- !u!61 &958447565
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -7800,12 +7802,11 @@ MonoBehaviour:
   rb: {fileID: 0}
   storageInteract: {fileID: 712541175}
   inventoryStorageManager: {fileID: 671448875}
+  player1State: 0
   playerMovementEnabled: 1
   lastPlayerPosition: {x: 0, y: 0, z: 0}
   uI_Inventory: {fileID: 1876450142}
   uI_InventoryStorage: {fileID: 1865711823}
-  ambilStorage: 0
-  simpanStorage: 0
   moveUpKey: 119
   moveDownKey: 115
   moveLeftKey: 97

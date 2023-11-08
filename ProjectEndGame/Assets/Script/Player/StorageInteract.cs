@@ -52,6 +52,7 @@ public class StorageInteract : MonoBehaviour, IInteractable
     {
         if (Input.GetKeyDown(KeyCode.C) && !panelOnPlayer2)
         {
+            player1Controller.player1State = Player1State.Interact;
             player1Controller.rb.velocity = Vector2.zero;
             player1Controller.lastPlayerPosition = player1Controller.transform.position;
             player1Controller.transform.position = player1Controller.lastPlayerPosition;
@@ -61,6 +62,7 @@ public class StorageInteract : MonoBehaviour, IInteractable
         }
         else if (Input.GetKeyDown(KeyCode.M) && !panelOnPlayer1)
         {
+            player2Controller.Player2State = Player2State.Interact;
             player2Controller.rb.velocity = Vector2.zero;
             player2Controller.lastPlayerPosition = player2Controller.transform.position;
             player2Controller.transform.position = player2Controller.lastPlayerPosition;
@@ -80,35 +82,26 @@ public class StorageInteract : MonoBehaviour, IInteractable
 
     public void ambilBtnPlayer1()
     {
-
-        player1Controller.ambilStorage = true;
-        player1Controller.simpanStorage = false;
+        player1Controller.player1State = Player1State.RetriveItem;
         Player1OpenTrade();
     }
 
     public void simpanBtnPlayer1()
     {
-
-        player1Controller.ambilStorage = false;
-        player1Controller.simpanStorage = true;
+        player1Controller.player1State = Player1State.SaveItem;
         Player1OpenTrade();
     }
 
     public void ambilBtnPlayer2()
     {
-
-        player2Controller.ambilStorage = true;
-        player2Controller.simpanStorage = false;
+        player2Controller.Player2State = Player2State.RetriveItem;
         Player2OpenTrade();
     }
 
     public void simpanBtnPlayer2()
     {
-
-        player2Controller.ambilStorage = false;
-        player2Controller.simpanStorage = true;
+        player2Controller.Player2State = Player2State.SaveItem;
         Player2OpenTrade();
-
     }
 
     private void UpdateButtonHighlight()
@@ -164,7 +157,6 @@ public class StorageInteract : MonoBehaviour, IInteractable
 
     public void HandleButtonSelectionInput()
     {
-        // Tombol-tombol navigasi keyboard, misalnya "A" dan "D"
         if (Input.GetKeyDown(KeyCode.A))
         {
             SelectPreviousButton();
@@ -175,9 +167,8 @@ public class StorageInteract : MonoBehaviour, IInteractable
         }
         else if (Input.GetKeyDown(KeyCode.C) && isSelecting)
         {
-            // Tombol "C" untuk memilih tombol yang dipilih
             buttonOpsiPlayer1[selectedButtonIndex].GetComponent<Button>().onClick.Invoke();
-            isSelecting = false; // Setel kembali isSelecting ke false setelah memilih
+            isSelecting = false;
         }
         else if (Input.GetKeyDown(KeyCode.X))
         {
@@ -185,6 +176,7 @@ public class StorageInteract : MonoBehaviour, IInteractable
             panelPlayer1.SetActive(false);
             Player1Controller player1Controller = FindObjectOfType<Player1Controller>();
             player1Controller.playerMovementEnabled = true;
+            player1Controller.player1State = Player1State.Idle;
 
         }
 

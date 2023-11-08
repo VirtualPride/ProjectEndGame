@@ -31,4 +31,9 @@ public class PlayerInteractUI : MonoBehaviour
         gameObject.SetActive(false);
         textMeshProUGUI.text = "";
     }
+
+    public bool IsInteracting()
+    {
+        return true;
+    }
 }
