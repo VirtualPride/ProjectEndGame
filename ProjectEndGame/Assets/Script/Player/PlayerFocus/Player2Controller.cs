@@ -10,7 +10,7 @@ public class Player2Controller : MonoBehaviour
     public InventoryPlayer2 inventoryPlayer2;
     public StorageInteract storageInteract;
     public InventoryStorageManager inventoryStorageManager;
-    public Player2State Player2State;
+    public Player2State player2State;
     private Item.ItemType keyDoorType;
     private bool nearDoor;
     private bool canOpenDoor;
@@ -55,61 +55,14 @@ public class Player2Controller : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        Player2State = Player2State.Idle;
+        player2State = Player2State.Idle;
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.N) && Player2State == Player2State.Idle && !storageInteract.panelOnPlayer1)
-        {
-            lastPlayerPosition = transform.position;
-            Player2State = Player2State.OpenMenu;
-            OpenMenu();
-        }
-        else if (Input.GetKeyDown(KeyCode.N) && Player2State == Player2State.OpenMenu)
-        {
-            Player2State = Player2State.Idle;
-            CloseMenu();
-        }
 
-        if (Player2State == Player2State.Idle)
-        {
-            HandleMovementInput();
-        }
-        else if (Player2State == Player2State.OpenMenu)
-        {
-            HandleInventoryInput();
-        }
-        if (Player2State == Player2State.SaveItem)
-        {
-            HandleSaveItemInput();
-            if (Input.GetKeyDown(KeyCode.N) && Player2State == Player2State.SaveItem)
-            {
-                Player2State = Player2State.Idle;
-                CloseTrade();
-                CloseMenu();
-            }
-        }
-        else if (Player2State == Player2State.RetriveItem)
-        {
-            HandleRetriveItemInput();
-            if (Input.GetKeyDown(KeyCode.N) && Player2State == Player2State.RetriveItem)
-            {
-                Player2State = Player2State.Idle;
-                CloseTrade();
-                CloseMenu();
-            }
-        }
-
-        if (Player2State == Player2State.Idle)
-        {
-            if (Input.GetKeyDown(KeyCode.M))
-            {
-                playerInteract.DetectInteractableObjects();
-                ItemInteract itemInteract = playerInteract.GetInteractableObject() as ItemInteract;
-            }
-        }
         HandleState();
+        HandleInput();
 
     }
 
@@ -347,7 +300,7 @@ public class Player2Controller : MonoBehaviour
 
     private void HandleState()
     {
-        switch (Player2State)
+        switch (player2State)
         {
             case Player2State.Idle:
                 playerMovementEnabled = true;
@@ -374,6 +327,57 @@ public class Player2Controller : MonoBehaviour
         playerMovementEnabled = false;
     }
 
+    private void HandleInput()
+    {
+        if (Input.GetKeyDown(KeyCode.N) && player2State == Player2State.Idle && !storageInteract.panelOnPlayer2)
+        {
+            lastPlayerPosition = transform.position;
+            player2State = Player2State.OpenMenu;
+            OpenMenu();
+        }
+        else if (Input.GetKeyDown(KeyCode.N) && player2State == Player2State.OpenMenu)
+        {
+            player2State = Player2State.Idle;
+            CloseMenu();
+        }
 
+        if (player2State == Player2State.Idle)
+        {
+            HandleMovementInput();
+        }
+        else if (player2State == Player2State.OpenMenu)
+        {
+            HandleInventoryInput();
+        }
+        if (player2State == Player2State.SaveItem)
+        {
+            HandleSaveItemInput();
+            if (Input.GetKeyDown(KeyCode.N) && player2State == Player2State.SaveItem)
+            {
+                player2State = Player2State.Idle;
+                CloseTrade();
+                CloseMenu();
+            }
+        }
+        else if (player2State == Player2State.RetriveItem)
+        {
+            HandleRetriveItemInput();
+            if (Input.GetKeyDown(KeyCode.N) && player2State == Player2State.RetriveItem)
+            {
+                player2State = Player2State.Idle;
+                CloseTrade();
+                CloseMenu();
+            }
+        }
+
+        if (player2State == Player2State.Idle)
+        {
+            if (Input.GetKeyDown(KeyCode.M))
+            {
+                playerInteract.DetectInteractableObjects();
+                ItemInteract itemInteract = playerInteract.GetInteractableObject() as ItemInteract;
+            }
+        }
+    }
 
 }

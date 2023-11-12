@@ -56,17 +56,15 @@ public class StorageInteract : MonoBehaviour, IInteractable
             player1Controller.rb.velocity = Vector2.zero;
             player1Controller.lastPlayerPosition = player1Controller.transform.position;
             player1Controller.transform.position = player1Controller.lastPlayerPosition;
-            player1Controller.playerMovementEnabled = false;
             panelOnPlayer1 = true;
             panelPlayer1.SetActive(true);
         }
         else if (Input.GetKeyDown(KeyCode.M) && !panelOnPlayer1)
         {
-            player2Controller.Player2State = Player2State.Interact;
+            player2Controller.player2State = Player2State.Interact;
             player2Controller.rb.velocity = Vector2.zero;
             player2Controller.lastPlayerPosition = player2Controller.transform.position;
             player2Controller.transform.position = player2Controller.lastPlayerPosition;
-            player2Controller.playerMovementEnabled = false;
             panelOnPlayer2 = true;
             panelPlayer2.SetActive(true);
         }
@@ -94,13 +92,13 @@ public class StorageInteract : MonoBehaviour, IInteractable
 
     public void ambilBtnPlayer2()
     {
-        player2Controller.Player2State = Player2State.RetriveItem;
+        player2Controller.player2State = Player2State.RetriveItem;
         Player2OpenTrade();
     }
 
     public void simpanBtnPlayer2()
     {
-        player2Controller.Player2State = Player2State.SaveItem;
+        player2Controller.player2State = Player2State.SaveItem;
         Player2OpenTrade();
     }
 
@@ -170,12 +168,11 @@ public class StorageInteract : MonoBehaviour, IInteractable
             buttonOpsiPlayer1[selectedButtonIndex].GetComponent<Button>().onClick.Invoke();
             isSelecting = false;
         }
-        else if (Input.GetKeyDown(KeyCode.X))
+        else if (Input.GetKeyDown(KeyCode.X) && panelOnPlayer1)
         {
             isSelecting = false;
             panelPlayer1.SetActive(false);
             Player1Controller player1Controller = FindObjectOfType<Player1Controller>();
-            player1Controller.playerMovementEnabled = true;
             player1Controller.player1State = Player1State.Idle;
 
         }
@@ -201,7 +198,6 @@ public class StorageInteract : MonoBehaviour, IInteractable
             isSelecting = false;
             panelPlayer2.SetActive(false);
             Player2Controller player2Controller = FindObjectOfType<Player2Controller>();
-            player2Controller.playerMovementEnabled = true;
         }
     }
 

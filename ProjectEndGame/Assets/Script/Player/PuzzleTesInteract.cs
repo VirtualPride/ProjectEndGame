@@ -21,7 +21,11 @@ public class PuzzleTesInteract : MonoBehaviour, IInteractable
     }
     private void Update()
     {
-        HandleQuitPuzzleInput();
+        if (player1Move == true || player2Move == true)
+        {
+            HandleQuitPuzzleInput();
+            Debug.Log("ini hidup");
+        }
     }
     public void Interact()
     {
@@ -29,15 +33,20 @@ public class PuzzleTesInteract : MonoBehaviour, IInteractable
         {
             if (Input.GetKeyDown(KeyCode.C))
             {
+                MovementDisabled();
                 CameraOn();
                 player1Move = true;
+                LastPosition();
                 MovementDisabled();
+
                 playerInteractUI.IsInteracting();
             }
             else if (Input.GetKeyDown(KeyCode.M))
             {
+                MovementDisabled();
                 CameraOn();
-                player1Controller.playerMovementEnabled = false;
+                player2Move = true;
+                LastPosition();
                 MovementDisabled();
                 playerInteractUI.IsInteracting();
             }
@@ -49,15 +58,29 @@ public class PuzzleTesInteract : MonoBehaviour, IInteractable
         if (Input.GetKeyDown(KeyCode.X))
         {
             CmaeraOff();
-            player1Controller.playerMovementEnabled = true;
-            player2Controller.playerMovementEnabled = true;
-
+            MovementEnabled();
+            if (player1Move == true)
+            {
+                player1Move = false;
+            }
+            else if (player2Move == true)
+            {
+                player2Move = false;
+            }
         }
         else if (Input.GetKeyDown(KeyCode.N))
         {
+
             CmaeraOff();
-            player1Controller.playerMovementEnabled = true;
-            player2Controller.playerMovementEnabled = true;
+            MovementEnabled();
+            if (player1Move == true)
+            {
+                player1Move = false;
+            }
+            else if (player2Move == true)
+            {
+                player2Move = false;
+            }
         }
     }
     public Transform GetTransform()
@@ -84,13 +107,20 @@ public class PuzzleTesInteract : MonoBehaviour, IInteractable
 
     private void MovementDisabled()
     {
-        player2Controller.rb.velocity = Vector2.zero;
-        player2Controller.lastPlayerPosition = player2Controller.transform.position;
-        player2Controller.transform.position = player2Controller.lastPlayerPosition;
-        player2Controller.playerMovementEnabled = false;
-        player1Controller.rb.velocity = Vector2.zero;
+        player1Controller.player1State = Player1State.Interact;
+        player2Controller.player2State = Player2State.Interact;
+    }
+    private void MovementEnabled()
+    {
+        player1Controller.player1State = Player1State.Idle;
+        player2Controller.player2State = Player2State.Idle;
+    }
+
+    private void LastPosition()
+    {
         player1Controller.lastPlayerPosition = player1Controller.transform.position;
         player1Controller.transform.position = player1Controller.lastPlayerPosition;
-        player1Controller.playerMovementEnabled = false;
+        player2Controller.lastPlayerPosition = player2Controller.transform.position;
+        player2Controller.transform.position = player2Controller.lastPlayerPosition;
     }
 }

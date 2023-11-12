@@ -2480,7 +2480,7 @@ MonoBehaviour:
   rb: {fileID: 0}
   storageInteract: {fileID: 712541175}
   inventoryStorageManager: {fileID: 671448875}
-  Player2State: 0
+  player2State: 0
   playerMovementEnabled: 1
   lastPlayerPosition: {x: 0, y: 0, z: 0}
   uI_InventoryPlayer2: {fileID: 255214737}

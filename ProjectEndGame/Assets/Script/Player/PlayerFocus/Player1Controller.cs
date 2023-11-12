@@ -50,56 +50,9 @@ public class Player1Controller : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.X) && player1State == Player1State.Idle && !storageInteract.panelOnPlayer1)
-        {
-            lastPlayerPosition = transform.position;
-            player1State = Player1State.OpenMenu;
-            OpenMenu();
-        }
-        else if (Input.GetKeyDown(KeyCode.X) && player1State == Player1State.OpenMenu)
-        {
-            player1State = Player1State.Idle;
-            CloseMenu();
-        }
-
-        if (player1State == Player1State.Idle)
-        {
-            HandleMovementInput();
-        }
-        else if (player1State == Player1State.OpenMenu)
-        {
-            HandleInventoryInput();
-        }
-        if (player1State == Player1State.SaveItem)
-        {
-            HandleSaveItemInput();
-            if (Input.GetKeyDown(KeyCode.X) && player1State == Player1State.SaveItem)
-            {
-                player1State = Player1State.Idle;
-                CloseTrade();
-                CloseMenu();
-            }
-        }
-        else if (player1State == Player1State.RetriveItem)
-        {
-            HandleRetriveItemInput();
-            if (Input.GetKeyDown(KeyCode.X) && player1State == Player1State.RetriveItem)
-            {
-                player1State = Player1State.Idle;
-                CloseTrade();
-                CloseMenu();
-            }
-        }
-
-        if (player1State == Player1State.Idle)
-        {
-            if (Input.GetKeyDown(KeyCode.C))
-            {
-                playerInteract.DetectInteractableObjects();
-                ItemInteract itemInteract = playerInteract.GetInteractableObject() as ItemInteract;
-            }
-        }
         HandleState();
+        Debug.Log("State :" + player1State);
+        HandleInput();
 
     }
 
@@ -364,6 +317,56 @@ public class Player1Controller : MonoBehaviour
         playerMovementEnabled = false;
     }
 
+    private void HandleInput()
+    {
+
+        if (Input.GetKeyDown(KeyCode.X) && player1State == Player1State.Idle && !storageInteract.panelOnPlayer1)
+        {
+            lastPlayerPosition = transform.position;
+            player1State = Player1State.OpenMenu;
+            OpenMenu();
+        }
+        else if (Input.GetKeyDown(KeyCode.X) && player1State == Player1State.OpenMenu)
+        {
+            player1State = Player1State.Idle;
+            CloseMenu();
+        }
+
+        if (player1State == Player1State.Idle)
+        {
+            HandleMovementInput();
+        }
+        else if (player1State == Player1State.OpenMenu)
+        {
+            HandleInventoryInput();
+        }
+        if (player1State == Player1State.SaveItem)
+        {
+            HandleSaveItemInput();
+            if (Input.GetKeyDown(KeyCode.X) && player1State == Player1State.SaveItem)
+            {
+                player1State = Player1State.Idle;
+                CloseTrade();
+                CloseMenu();
+            }
+        }
+        else if (player1State == Player1State.RetriveItem)
+        {
+            HandleRetriveItemInput();
+            if (Input.GetKeyDown(KeyCode.X) && player1State == Player1State.RetriveItem)
+            {
+                player1State = Player1State.Idle;
+                CloseTrade();
+                CloseMenu();
+            }
+        }
+
+        if (player1State == Player1State.Idle && Input.GetKeyDown(KeyCode.C))
+        {
+            playerInteract.DetectInteractableObjects();
+            ItemInteract itemInteract = playerInteract.GetInteractableObject() as ItemInteract;
+        }
+    }
 
 
 }
