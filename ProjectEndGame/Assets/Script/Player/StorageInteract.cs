@@ -198,6 +198,7 @@ public class StorageInteract : MonoBehaviour, IInteractable
             isSelecting = false;
             panelPlayer2.SetActive(false);
             Player2Controller player2Controller = FindObjectOfType<Player2Controller>();
+            player2Controller.player2State = Player2State.Idle;
         }
     }
 

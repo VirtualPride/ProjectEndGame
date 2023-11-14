@@ -3,17 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public class PlayerInteractUI : MonoBehaviour
+public class PlayerInteractUIPlayer2 : MonoBehaviour
 {
     [SerializeField] private new GameObject gameObject;
     [SerializeField] private PlayerInteract playerInteract;
     [SerializeField] private TextMeshProUGUI textMeshProUGUI;
-    [SerializeField] private Player1Controller player1Controller;
+    [SerializeField] private Player2Controller player2Controller;
 
     private void Update()
     {
 
-        if (playerInteract.GetInteractableObject() != null && player1Controller.player1State == Player1State.Idle)
+        if (playerInteract.GetInteractableObject() != null && player2Controller.player2State == Player2State.Idle)
         {
 
             Show(playerInteract.GetInteractableObject());
@@ -34,6 +34,4 @@ public class PlayerInteractUI : MonoBehaviour
         gameObject.SetActive(false);
         textMeshProUGUI.text = "";
     }
-
-   
 }

@@ -11,7 +11,9 @@ public class PuzzleTesInteract : MonoBehaviour, IInteractable
     [SerializeField] private RuanganTestController ruanganTestController;
     [SerializeField] public bool player1Move = false;
     [SerializeField] public bool player2Move = false;
-    [SerializeField] private PlayerInteractUI playerInteractUI;
+    [SerializeField] private PuzzleMove puzzleMove;
+    [SerializeField] private ObstacleMove obstacleMove;
+    public bool inPuzzle = false;
     private string interactText = "Mulai";
 
     private void Awake()
@@ -21,43 +23,61 @@ public class PuzzleTesInteract : MonoBehaviour, IInteractable
     }
     private void Update()
     {
-        if (player1Move == true || player2Move == true)
+        CheckInPuzzle();
+        if (inPuzzle == true)
         {
-            HandleQuitPuzzleInput();
-            Debug.Log("ini hidup");
+            if (player1Move == true || player2Move == true)
+            {
+                HandleQuitPuzzleInput();
+            }
+
+            if (puzzleMove.isFinish == true)
+            {
+                CameraOff();
+                MovementEnabled();
+                interactText = "Puzzle Selesai";
+            }
+
+
         }
+
     }
     public void Interact()
     {
-        if (ruanganTestController.player1InRoom && ruanganTestController.player2InRoom)
+        if (puzzleMove.isFinish == false)
         {
-            if (Input.GetKeyDown(KeyCode.C))
+            if (ruanganTestController.player1InRoom && ruanganTestController.player2InRoom)
             {
-                MovementDisabled();
-                CameraOn();
-                player1Move = true;
-                LastPosition();
-                MovementDisabled();
-
-                playerInteractUI.IsInteracting();
+                interactText = "Mulai";
+                if (Input.GetKeyDown(KeyCode.C))
+                {
+                    MovementDisabled();
+                    CameraOn();
+                    player1Move = true;
+                    LastPosition();
+                    MovementDisabled();
+                }
+                else if (Input.GetKeyDown(KeyCode.M))
+                {
+                    MovementDisabled();
+                    CameraOn();
+                    player2Move = true;
+                    LastPosition();
+                    MovementDisabled();
+                }
             }
-            else if (Input.GetKeyDown(KeyCode.M))
+            else
             {
-                MovementDisabled();
-                CameraOn();
-                player2Move = true;
-                LastPosition();
-                MovementDisabled();
-                playerInteractUI.IsInteracting();
+                interactText = "Bawa Temanmu";
             }
         }
-
     }
     private void HandleQuitPuzzleInput()
     {
         if (Input.GetKeyDown(KeyCode.X))
         {
-            CmaeraOff();
+           
+            CameraOff();
             MovementEnabled();
             if (player1Move == true)
             {
@@ -70,8 +90,8 @@ public class PuzzleTesInteract : MonoBehaviour, IInteractable
         }
         else if (Input.GetKeyDown(KeyCode.N))
         {
-
-            CmaeraOff();
+     
+            CameraOff();
             MovementEnabled();
             if (player1Move == true)
             {
@@ -98,7 +118,7 @@ public class PuzzleTesInteract : MonoBehaviour, IInteractable
         puzzleGerakCamPlayer1.enabled = true;
         puzzleGerakCamPlayer2.enabled = true;
     }
-    private void CmaeraOff()
+    private void CameraOff()
     {
 
         puzzleGerakCamPlayer1.enabled = false;
@@ -122,5 +142,17 @@ public class PuzzleTesInteract : MonoBehaviour, IInteractable
         player1Controller.transform.position = player1Controller.lastPlayerPosition;
         player2Controller.lastPlayerPosition = player2Controller.transform.position;
         player2Controller.transform.position = player2Controller.lastPlayerPosition;
+    }
+
+    private void CheckInPuzzle()
+    {
+        if (puzzleGerakCamPlayer1.enabled == true && puzzleGerakCamPlayer2.enabled == true)
+        {
+            inPuzzle = true;
+        }
+        else
+        {
+            inPuzzle = false;
+        }
     }
 }

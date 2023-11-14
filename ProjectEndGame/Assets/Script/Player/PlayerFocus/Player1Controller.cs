@@ -51,7 +51,6 @@ public class Player1Controller : MonoBehaviour
     void Update()
     {
         HandleState();
-        Debug.Log("State :" + player1State);
         HandleInput();
 
     }
