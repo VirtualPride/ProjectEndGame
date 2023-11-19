@@ -19,11 +19,11 @@ public class PuzzleMove : MonoBehaviour
     {
         if (puzzleTesInteract.inPuzzle)
         {
-            if (puzzleTesInteract.player1Move == true)
+            if (puzzleTesInteract.player1Move == true && puzzleTesInteract.player1Inpuzzle == true)
             {
                 HandleMovementInputPlayer1();
             }
-            else if (puzzleTesInteract.player2Move == true)
+            else if (puzzleTesInteract.player2Move == true && puzzleTesInteract.player2Inpuzzle == true)
             {
                 HandleMovementInputPlayer2();
             }

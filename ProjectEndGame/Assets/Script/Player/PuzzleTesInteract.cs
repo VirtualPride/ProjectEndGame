@@ -14,6 +14,8 @@ public class PuzzleTesInteract : MonoBehaviour, IInteractable
     [HideInInspector] public bool player1Move;
     [HideInInspector] public bool player2Move;
     [HideInInspector] public bool inPuzzle;
+    [HideInInspector] public bool player1Inpuzzle;
+    [HideInInspector] public bool player2Inpuzzle;
 
     private string interactText = "Mulai Puzzle";
 
@@ -45,12 +47,30 @@ public class PuzzleTesInteract : MonoBehaviour, IInteractable
             cameraManager.player1PuzzleGerakCamera.enabled = true;
             player1Controller.player1State = Player1State.Interact;
             LastPositionPlayer1();
+            player1Inpuzzle = true;
+            if (player2Move == false)
+            {
+                player1Move = true;
+            }
+            else
+            {
+                player1Move = false;
+            }
         }
         else if (Input.GetKeyDown(KeyCode.M) && !player2PuzzleCamActive)
         {
             cameraManager.player2PuzzleGerakCamera.enabled = true;
             player2Controller.player2State = Player2State.Interact;
             LastPositionPlayer2();
+            player2Inpuzzle = true;
+            if (player1Move == false)
+            {
+                player2Move = true;
+            }
+            else
+            {
+                player2Move = false;
+            }
         }
     }
     private void LastPositionPlayer1()
@@ -86,6 +106,11 @@ public class PuzzleTesInteract : MonoBehaviour, IInteractable
                 cameraManager.player1RuanganTestCam.enabled = true;
                 cameraManager.player1PuzzleGerakCamera.enabled = false;
                 player1Controller.player1State = Player1State.Idle;
+                player1Inpuzzle = false;
+                if (player1Move == true)
+                {
+                    player1Move = false;
+                }
             }
         }
         else if (cameraManager.player2PuzzleGerakCamera.enabled == true)
@@ -95,6 +120,11 @@ public class PuzzleTesInteract : MonoBehaviour, IInteractable
                 cameraManager.player2RuanganTestCam.enabled = true;
                 cameraManager.player2PuzzleGerakCamera.enabled = false;
                 player2Controller.player2State = Player2State.Idle;
+                player2Inpuzzle = false;
+                if (player2Move == true)
+                {
+                    player2Move = false;
+                }
             }
         }
     }

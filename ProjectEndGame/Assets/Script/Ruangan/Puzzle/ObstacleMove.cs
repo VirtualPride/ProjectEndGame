@@ -21,11 +21,11 @@ public class ObstacleMove : MonoBehaviour
     {
         if (puzzleTesInteract.inPuzzle)
         {
-            if (puzzleTesInteract.player1Move == true)
+            if (puzzleTesInteract.player1Move == true && puzzleTesInteract.player2Inpuzzle == true)
             {
                 HandleMovementInputPlayer2();
             }
-            else if (puzzleTesInteract.player2Move == true)
+            else if (puzzleTesInteract.player2Move == true && puzzleTesInteract.player1Inpuzzle == true)
             {
                 HandleMovementInputPlayer1();
             }
@@ -52,11 +52,7 @@ public class ObstacleMove : MonoBehaviour
         Vector2 movement = new Vector2(moveHorizontal, moveVertical);
         rb.velocity = movement.normalized * moveSpeed;
 
-        if (Input.GetKey(KeyCode.C))
-        {
-            rb.constraints = RigidbodyConstraints2D.FreezeAll;
 
-        }
 
     }
 
@@ -75,11 +71,7 @@ public class ObstacleMove : MonoBehaviour
         Vector2 movement = new Vector2(moveHorizontal, moveVertical);
         rb.velocity = movement.normalized * moveSpeed;
 
-        if (Input.GetKey(KeyCode.M))
-        {
-            rb.constraints = RigidbodyConstraints2D.FreezeAll;
 
-        }
 
     }
 }
