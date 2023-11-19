@@ -3149,6 +3149,59 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 888410559}
   m_CullTransparentMesh: 1
+--- !u!1 &923531611
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 923531613}
+  - component: {fileID: 923531612}
+  m_Layer: 0
+  m_Name: CameraManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &923531612
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 923531611}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 516191edec4fa6a478369cd4ce5aadb8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player1MainCamera: {fileID: 553256562}
+  player2MainCamera: {fileID: 1996118122}
+  player1PuzzleGerakCamera: {fileID: 1739919867}
+  player2PuzzleGerakCamera: {fileID: 353109048}
+  player1RuanganTestCam: {fileID: 1449728734}
+  player2RuanganTestCam: {fileID: 1936695965}
+  RuanganCamTestGabungan: {fileID: 730693062}
+  otherPlayer1CameraOn: 0
+  otherPlayer2CameraOn: 0
+--- !u!4 &923531613
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 923531611}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -6.7964683, y: -14.694591, z: -7.968073}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 18
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &958447561
 GameObject:
   m_ObjectHideFlags: 0
@@ -3249,13 +3302,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player1Controller: {fileID: 2134094379}
   player2Controller: {fileID: 747084278}
-  puzzleGerakCamPlayer1: {fileID: 1739919867}
-  puzzleGerakCamPlayer2: {fileID: 353109048}
-  ruanganTestController: {fileID: 1605479852}
-  player1Move: 0
-  player2Move: 0
+  ruanganTestController: {fileID: 1605479856}
   puzzleMove: {fileID: 2136804820}
   obstacleMove: {fileID: 1298599706}
+  cameraManager: {fileID: 923531612}
+  player1Move: 0
+  player2Move: 0
   inPuzzle: 0
 --- !u!61 &958447565
 BoxCollider2D:
@@ -5745,7 +5797,7 @@ GameObject:
   - component: {fileID: 1605479855}
   - component: {fileID: 1605479854}
   - component: {fileID: 1605479853}
-  - component: {fileID: 1605479852}
+  - component: {fileID: 1605479856}
   m_Layer: 0
   m_Name: Ruangan_Test
   m_TagString: Untagged
@@ -5753,24 +5805,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1605479852
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1605479851}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1375b4e68ccc70a40bd52aace59a0dac, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  player1InRoom: 0
-  player2InRoom: 0
-  roomCollider: {fileID: 1605479853}
-  Player1RuanganCam: {fileID: 1449728734}
-  Player2RuanganCam: {fileID: 1936695965}
-  RuanganCamGabungan: {fileID: 730693062}
 --- !u!61 &1605479853
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -5870,6 +5904,25 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1605479856
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1605479851}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1375b4e68ccc70a40bd52aace59a0dac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player1InRoom: 0
+  player2InRoom: 0
+  cameraManager: {fileID: 923531612}
+  player1Controller: {fileID: 2134094379}
+  player2Controller: {fileID: 747084278}
+  roomCollider: {fileID: 1605479853}
+  RuanganCamGabungan: {fileID: 730693062}
 --- !u!1 &1611734616
 GameObject:
   m_ObjectHideFlags: 0

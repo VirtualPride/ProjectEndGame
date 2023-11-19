@@ -1,152 +1,73 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class PuzzleTesInteract : MonoBehaviour, IInteractable
 {
-    [SerializeField] private Player1Controller player1Controller;
-    [SerializeField] private Player2Controller player2Controller;
-    [SerializeField] private Camera puzzleGerakCamPlayer1;
-    [SerializeField] private Camera puzzleGerakCamPlayer2;
+    [SerializeField] Player1Controller player1Controller;
+    [SerializeField] Player2Controller player2Controller;
     [SerializeField] private RuanganTestController ruanganTestController;
-    [SerializeField] public bool player1Move = false;
-    [SerializeField] public bool player2Move = false;
     [SerializeField] private PuzzleMove puzzleMove;
     [SerializeField] private ObstacleMove obstacleMove;
-    public bool inPuzzle = false;
-    private string interactText = "Mulai";
+    [SerializeField] private CameraManager cameraManager;
+    [HideInInspector] public bool player1Move;
+    [HideInInspector] public bool player2Move;
+    [HideInInspector] public bool inPuzzle;
 
-    private void Awake()
-    {
-        puzzleGerakCamPlayer1.enabled = false;
-        puzzleGerakCamPlayer2.enabled = false;
-    }
+    private string interactText = "Mulai Puzzle";
+
     private void Update()
     {
         CheckInPuzzle();
-        if (inPuzzle == true)
+        if (inPuzzle)
         {
-            if (player1Move == true || player2Move == true)
-            {
-                HandleQuitPuzzleInput();
-            }
-
-            if (puzzleMove.isFinish == true)
-            {
-                CameraOff();
-                MovementEnabled();
-                interactText = "Puzzle Selesai";
-            }
-
-
+            HandleQuitPuzzleInput();
         }
-
     }
-    public void Interact()
+    public string GetInteractText()
     {
-        if (puzzleMove.isFinish == false)
-        {
-            if (ruanganTestController.player1InRoom && ruanganTestController.player2InRoom)
-            {
-                interactText = "Mulai";
-                if (Input.GetKeyDown(KeyCode.C))
-                {
-                    MovementDisabled();
-                    CameraOn();
-                    player1Move = true;
-                    LastPosition();
-                    MovementDisabled();
-                }
-                else if (Input.GetKeyDown(KeyCode.M))
-                {
-                    MovementDisabled();
-                    CameraOn();
-                    player2Move = true;
-                    LastPosition();
-                    MovementDisabled();
-                }
-            }
-            else
-            {
-                interactText = "Bawa Temanmu";
-            }
-        }
+        return interactText;
     }
-    private void HandleQuitPuzzleInput()
-    {
-        if (Input.GetKeyDown(KeyCode.X))
-        {
-           
-            CameraOff();
-            MovementEnabled();
-            if (player1Move == true)
-            {
-                player1Move = false;
-            }
-            else if (player2Move == true)
-            {
-                player2Move = false;
-            }
-        }
-        else if (Input.GetKeyDown(KeyCode.N))
-        {
-     
-            CameraOff();
-            MovementEnabled();
-            if (player1Move == true)
-            {
-                player1Move = false;
-            }
-            else if (player2Move == true)
-            {
-                player2Move = false;
-            }
-        }
-    }
+
     public Transform GetTransform()
     {
         return transform;
     }
 
-    public string GetInteractText()
+    public void Interact()
     {
-        return interactText;
-    }
-    private void CameraOn()
-    {
+        bool player1PuzzleCamActive = cameraManager.player1PuzzleGerakCamera.enabled;
+        bool player2PuzzleCamActive = cameraManager.player2PuzzleGerakCamera.enabled;
 
-        puzzleGerakCamPlayer1.enabled = true;
-        puzzleGerakCamPlayer2.enabled = true;
+        if (Input.GetKeyDown(KeyCode.C) && !player1PuzzleCamActive)
+        {
+            cameraManager.player1PuzzleGerakCamera.enabled = true;
+            player1Controller.player1State = Player1State.Interact;
+            LastPositionPlayer1();
+        }
+        else if (Input.GetKeyDown(KeyCode.M) && !player2PuzzleCamActive)
+        {
+            cameraManager.player2PuzzleGerakCamera.enabled = true;
+            player2Controller.player2State = Player2State.Interact;
+            LastPositionPlayer2();
+        }
     }
-    private void CameraOff()
-    {
-
-        puzzleGerakCamPlayer1.enabled = false;
-        puzzleGerakCamPlayer2.enabled = false;
-    }
-
-    private void MovementDisabled()
-    {
-        player1Controller.player1State = Player1State.Interact;
-        player2Controller.player2State = Player2State.Interact;
-    }
-    private void MovementEnabled()
-    {
-        player1Controller.player1State = Player1State.Idle;
-        player2Controller.player2State = Player2State.Idle;
-    }
-
-    private void LastPosition()
+    private void LastPositionPlayer1()
     {
         player1Controller.lastPlayerPosition = player1Controller.transform.position;
         player1Controller.transform.position = player1Controller.lastPlayerPosition;
+    }
+
+    private void LastPositionPlayer2()
+    {
         player2Controller.lastPlayerPosition = player2Controller.transform.position;
         player2Controller.transform.position = player2Controller.lastPlayerPosition;
     }
 
     private void CheckInPuzzle()
     {
-        if (puzzleGerakCamPlayer1.enabled == true && puzzleGerakCamPlayer2.enabled == true)
+        if (cameraManager.player1PuzzleGerakCamera.enabled == true || cameraManager.player2PuzzleGerakCamera.enabled == true)
         {
             inPuzzle = true;
         }
@@ -155,4 +76,29 @@ public class PuzzleTesInteract : MonoBehaviour, IInteractable
             inPuzzle = false;
         }
     }
+
+    private void HandleQuitPuzzleInput()
+    {
+        if (cameraManager.player1PuzzleGerakCamera.enabled == true)
+        {
+            if (Input.GetKeyDown(KeyCode.X))
+            {
+                cameraManager.player1RuanganTestCam.enabled = true;
+                cameraManager.player1PuzzleGerakCamera.enabled = false;
+                player1Controller.player1State = Player1State.Idle;
+            }
+        }
+        else if (cameraManager.player2PuzzleGerakCamera.enabled == true)
+        {
+            if (Input.GetKeyDown(KeyCode.N))
+            {
+                cameraManager.player2RuanganTestCam.enabled = true;
+                cameraManager.player2PuzzleGerakCamera.enabled = false;
+                player2Controller.player2State = Player2State.Idle;
+            }
+        }
+    }
+
+
+
 }

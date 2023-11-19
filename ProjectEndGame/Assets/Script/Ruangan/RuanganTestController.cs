@@ -2,105 +2,87 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RuanganTestController : MonoBehaviour
+public class RuanganTestController : MonoBehaviour, IRuangan
 {
     [HideInInspector] public bool player1InRoom;
     [HideInInspector] public bool player2InRoom;
-    public BoxCollider2D roomCollider; // Anda harus menetapkan BoxCollider2D ini dalam inspektor
-    public Camera Player1RuanganCam;
-    public Camera Player2RuanganCam;
+    [SerializeField] private CameraManager cameraManager;
+    [SerializeField] private Player1Controller player1Controller;
+    [SerializeField] private Player2Controller player2Controller;
+    public BoxCollider2D roomCollider;
     public Camera RuanganCamGabungan;
 
     private GameObject batas;
 
     private GameObject player1;
     private GameObject player2;
-    private Camera camera1;
-    private Camera camera2;
 
-    private void Start()
+    private void Awake()
     {
-        cekCamera();
-        disabledCamera();
+        CekKamerea();
 
     }
-
     private void Update()
     {
-        cekRuangan();
+        CekRuangan();
     }
-
-    private void cekCamera()
+    public void CekKamerea()
     {
-        // Mengambil referensi ke objek Player1 dan Player2
-        camera1 = GameObject.Find("Player1Camera").GetComponent<Camera>();
-        camera2 = GameObject.Find("Player2Camera").GetComponent<Camera>();
+
         player1 = GameObject.Find("Player1_Test");
         player2 = GameObject.Find("Player2_Test");
         batas = GameObject.Find("BarTengah");
     }
 
-    private void disabledCamera()
+    public void CekRuangan()
     {
-        camera1.enabled = false;
-        camera2.enabled = false;
-        RuanganCamGabungan.enabled = false;
-    }
-
-    private void cekRuangan()
-    {
-        // Mengecek apakah posisi Player1 berada dalam collider ruangan
         player1InRoom = roomCollider.OverlapPoint(player1.transform.position);
-
-        // Mengecek apakah posisi Player2 berada dalam collider ruangan
         player2InRoom = roomCollider.OverlapPoint(player2.transform.position);
 
-        // Mengatur kamera sesuai dengan status pemain dalam ruangan
-        if (player1InRoom)
+        bool player1Idle = player1Controller.player1State == Player1State.Idle;
+        bool player2Idle = player2Controller.player2State == Player2State.Idle;
+        bool player1OpenMenu = player1Controller.player1State == Player1State.OpenMenu;
+        bool player2OpenMenu = player2Controller.player2State == Player2State.OpenMenu;
+
+        if (player1InRoom && player1Idle || player1InRoom && player1OpenMenu)
         {
-            Player1RuanganCam.enabled = true;
-            camera1.enabled = false;
+            cameraManager.player1RuanganTestCam.enabled = true;
         }
         else
         {
-            camera1.enabled = true;
-            Player1RuanganCam.enabled = false;
+            cameraManager.player1RuanganTestCam.enabled = false;
         }
 
-        if (player2InRoom)
+        if (player2InRoom && player2Idle || player2InRoom && player2OpenMenu)
         {
-            Player2RuanganCam.enabled = true;
-            camera2.enabled = false;
+            cameraManager.player2RuanganTestCam.enabled = true;
         }
         else
         {
-            camera2.enabled = true;
-            Player2RuanganCam.enabled = false;
+            cameraManager.player2RuanganTestCam.enabled = false;
         }
 
-        if (player1InRoom && player2InRoom)
+        if (player1InRoom && player2InRoom && player1Idle && player2Idle || player1InRoom && player2InRoom && player1OpenMenu && player2OpenMenu || player1InRoom && player2InRoom && player1Idle && player2OpenMenu || player1InRoom && player2InRoom && player1OpenMenu && player2Idle)
         {
-            camera1.enabled = false;
-            camera2.enabled = false;
             RuanganCamGabungan.enabled = true;
             batas.SetActive(false);
-
         }
         else
         {
             RuanganCamGabungan.enabled = false;
             batas.SetActive(true);
         }
-        if (!player1InRoom && !player2InRoom)
-        {
-            // Matikan semua kamera
-            Player1RuanganCam.enabled = false;
-            Player2RuanganCam.enabled = false;
-            RuanganCamGabungan.enabled = false;
 
-            // Aktifkan batas jika ruangan kosong
-            batas.SetActive(true);
+        // Check jika tidak ada pemain di ruangan, hidupkan kamera utama
+        if (!player1InRoom)
+        {
+            cameraManager.player1MainCamera.enabled = true;
         }
+        else if (!player2InRoom)
+        {
+            cameraManager.player2MainCamera.enabled = true;
+        }
+
     }
 
 }
