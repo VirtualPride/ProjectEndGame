@@ -2,14 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class DialogueManagerPlayer2 : MonoBehaviour
 {
-
-	public Text nameText;
-	public Text dialogueText;
-
-	public Animator animator;
+	[SerializeField]
+	private Image image;
+	[SerializeField]
+	private TextMeshProUGUI nameText;
+	[SerializeField]
+	private TextMeshProUGUI dialogueText;
+	[SerializeField]
+	private float textSpeed;
+	[SerializeField]
+	private Animator animator;
 
 	private Queue<string> sentences;
 
@@ -33,6 +39,7 @@ public class DialogueManagerPlayer2 : MonoBehaviour
 
 		Debug.Log("Starting conversation with " + dialogue.name);
 		nameText.text = dialogue.name;
+		image.sprite = dialogue.image;
 
 		sentences.Clear();
 
@@ -65,7 +72,7 @@ public class DialogueManagerPlayer2 : MonoBehaviour
 		foreach (char letter in sentence.ToCharArray())
 		{
 			dialogueText.text += letter;
-			yield return null;
+			yield return new WaitForSeconds(textSpeed);
 		}
 	}
 

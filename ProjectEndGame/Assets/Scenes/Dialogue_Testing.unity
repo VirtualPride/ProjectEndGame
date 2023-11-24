@@ -791,6 +791,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nameText: {fileID: 2072373876}
   dialogueText: {fileID: 1502241725}
+  textSpeed: 0.02
   animator: {fileID: 280032117}
 --- !u!4 &2031859949
 Transform:
