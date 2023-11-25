@@ -9,13 +9,15 @@ public class DialogueManage : MonoBehaviour
     public Image actorImage;
     public TextMeshProUGUI actorName;
     public TextMeshProUGUI messageText;
-    public RectTransform backgroundBox;
+    public Animator animator;
     [SerializeField]
     private float textSpeed;
 
     Message[] currentMessages;
+    Message2[] nextMessages;
     Actor[] currentActors;
-    int activeMessage = 0;
+    int activeMessage;
+    private bool isDone;
     public static bool isActive = false;
 
     // Start is called before the first frame update
@@ -31,17 +33,35 @@ public class DialogueManage : MonoBehaviour
         {
             NextMessage();
         }
+        // kondisi misi selesai
+        if (Input.GetKeyDown(KeyCode.W))
+		{
+            isDone = true;
+		}
     }
 
-    public void OpenDialogue(Message[] messages, Actor[] actors)
+    public void OpenDialogue(Message[] messages, Message2[] messages2, Actor[] actors)
 	{
+        Debug.Log(isDone);
+        animator.SetBool("IsOpen", true);
         currentMessages = messages;
+        nextMessages = messages2;
         currentActors = actors;
-        activeMessage = 0;
         isActive = true;
-
+        activeMessage = 0;
+        // kondisi misi selesai (opsional codingan bisa ganti setiap saat)
+        if (isDone == false)
+		{
+            DisplayMessage();
+        } else if(isDone == true && nextMessages.Length > 0)
+        {
+            DisplayMessage2();
+		} else
+		{
+            DisplayMessage();
+		}
         Debug.Log("Started conversation! Loaded messages: " + messages.Length);
-        DisplayMessage();
+        
 	}
 
     void DisplayMessage()
@@ -54,18 +74,42 @@ public class DialogueManage : MonoBehaviour
         Actor actorToDisplay = currentActors[messageToDisplay.actorId];
         actorName.text = actorToDisplay.name;
         actorImage.sprite = actorToDisplay.sprite;
+        Debug.Log(activeMessage);
 	}
+
+    void DisplayMessage2()
+    {
+        Message2 message2ToDisplay = nextMessages[activeMessage];
+        StopAllCoroutines();
+        StartCoroutine(TypeSentence(message2ToDisplay.message));
+        //messageText.text = messageToDisplay.message;
+
+        Actor actorToDisplay = currentActors[message2ToDisplay.actorId];
+        actorName.text = actorToDisplay.name;
+        actorImage.sprite = actorToDisplay.sprite;
+        Debug.Log(activeMessage);
+    }
 
     public void NextMessage()
 	{
         activeMessage++;
         if (activeMessage < currentMessages.Length)
 		{
-            DisplayMessage();
+            if (isDone == false)
+			{
+                DisplayMessage();
+            } else if (activeMessage < currentMessages.Length && nextMessages.Length == 0)
+			{
+                DisplayMessage();
+            }
+		} else if (activeMessage < nextMessages.Length && isDone == true)
+        {
+            DisplayMessage2();
 		} else
 		{
             Debug.Log("Conversation ended!");
             isActive = false;
+            animator.SetBool("IsOpen", false);
 		}
 	}
 

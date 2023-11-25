@@ -160,6 +160,7 @@ MonoBehaviour:
     message: HALOOO TRAVELER!
   - actorId: 0
     message: ANJAY BYE!
+  messages2: []
   actors:
   - name: NPC NGAWUR
     sprite: {fileID: 21300000, guid: 10828b84ccd3d4a48a93c693851e3ebe, type: 3}
@@ -582,6 +583,13 @@ MonoBehaviour:
     message: Yes! I'm ready - I'll master this game in no time!
   - actorId: 0
     message: Great! Good luck!
+  messages2:
+  - actorId: 0
+    message: Great! you bring my item
+  - actorId: 1
+    message: Yeah i did it!
+  - actorId: 0
+    message: Heres your reward
   actors:
   - name: NPC
     sprite: {fileID: 21300000, guid: 10828b84ccd3d4a48a93c693851e3ebe, type: 3}
@@ -1141,6 +1149,7 @@ GameObject:
   - component: {fileID: 1944820683}
   - component: {fileID: 1944820682}
   - component: {fileID: 1944820684}
+  - component: {fileID: 1944820685}
   m_Layer: 5
   m_Name: DialogueBox
   m_TagString: Untagged
@@ -1168,7 +1177,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 0, y: 103}
+  m_AnchoredPosition: {x: 0, y: -157}
   m_SizeDelta: {x: -296.0284, y: 159.5579}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1944820682
@@ -1224,5 +1233,25 @@ MonoBehaviour:
   actorImage: {fileID: 1561100789}
   actorName: {fileID: 932563222}
   messageText: {fileID: 488277179}
-  backgroundBox: {fileID: 1944820681}
+  animator: {fileID: 1944820685}
   textSpeed: 0.02
+--- !u!95 &1944820685
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1944820680}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 18c6d8386b40fc048b0fd78a07c85c52, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0

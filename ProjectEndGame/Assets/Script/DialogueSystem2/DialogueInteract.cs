@@ -5,11 +5,12 @@ using UnityEngine;
 public class DialogueInteract : MonoBehaviour
 {
     public Message[] messages;
+    public Message2[] messages2;
     public Actor[] actors;
 
     public void StartDialogue()
 	{
-        FindObjectOfType<DialogueManage>().OpenDialogue(messages, actors);
+        FindObjectOfType<DialogueManage>().OpenDialogue(messages, messages2, actors);
 	}
 }
 
@@ -17,6 +18,15 @@ public class DialogueInteract : MonoBehaviour
 public class Message
 {
     public int actorId;
+    [TextArea(3, 10)]
+    public string message;
+}
+
+[System.Serializable]
+public class Message2
+{
+    public int actorId;
+    [TextArea(3, 10)]
     public string message;
 }
 
