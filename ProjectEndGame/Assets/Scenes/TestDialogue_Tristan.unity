@@ -583,13 +583,7 @@ MonoBehaviour:
     message: Yes! I'm ready - I'll master this game in no time!
   - actorId: 0
     message: Great! Good luck!
-  messages2:
-  - actorId: 0
-    message: Great! you bring my item
-  - actorId: 1
-    message: Yeah i did it!
-  - actorId: 0
-    message: Heres your reward
+  messages2: []
   actors:
   - name: NPC
     sprite: {fileID: 21300000, guid: 10828b84ccd3d4a48a93c693851e3ebe, type: 3}
