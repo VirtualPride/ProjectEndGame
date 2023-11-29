@@ -13,17 +13,22 @@ public class DialogueManage : MonoBehaviour
     [SerializeField]
     private float textSpeed;
 
+    [SerializeField]
+    private float timeLimit;
+    private float currentTimeLimit;
+
     Message[] currentMessages;
     Message2[] nextMessages;
     Actor[] currentActors;
     int activeMessage;
+    private bool isDisplayMessage = false;
     private bool isDone;
     public static bool isActive = false;
 
     // Start is called before the first frame update
     void Start()
     {
-
+        currentTimeLimit = timeLimit;
     }
 
     // Update is called once per frame
@@ -39,6 +44,18 @@ public class DialogueManage : MonoBehaviour
             isDone = true;
             Debug.Log("isDone = " + isDone);
 		}
+
+        if (isActive == true && isDisplayMessage == true)
+        {
+            if (currentTimeLimit > 0)
+            {
+                currentTimeLimit -= Time.deltaTime;
+                Debug.Log(currentTimeLimit);
+            } else
+            {
+                NextMessage();
+            }
+        }
     }
 
     public void OpenDialogue(Message[] messages, Message2[] messages2, Actor[] actors)
@@ -54,15 +71,17 @@ public class DialogueManage : MonoBehaviour
         if (isDone == false)
 		{
             DisplayMessage();
+            isDisplayMessage = true;
         } else if(isDone == true && nextMessages.Length > 0)
         {
             DisplayMessage2();
+            isDisplayMessage = true;
 		} else
 		{
             DisplayMessage();
+			isDisplayMessage = true;
 		}
         Debug.Log("Started conversation! Loaded messages: " + messages.Length);
-        
 	}
 
     void DisplayMessage()
@@ -76,6 +95,8 @@ public class DialogueManage : MonoBehaviour
         actorName.text = actorToDisplay.name;
         actorImage.sprite = actorToDisplay.sprite;
         Debug.Log(activeMessage);
+		isDisplayMessage = false;
+        currentTimeLimit = timeLimit;
 	}
 
     void DisplayMessage2()
@@ -89,7 +110,9 @@ public class DialogueManage : MonoBehaviour
         actorName.text = actorToDisplay.name;
         actorImage.sprite = actorToDisplay.sprite;
         Debug.Log(activeMessage);
-    }
+		isDisplayMessage = false;
+		currentTimeLimit = timeLimit;
+	}
 
     public void NextMessage()
 	{
@@ -97,16 +120,20 @@ public class DialogueManage : MonoBehaviour
         if (isDone == false && activeMessage < currentMessages.Length)
         {
             DisplayMessage();
-        } else if (activeMessage < nextMessages.Length && isDone == true)
+			isDisplayMessage = true;
+		} else if (activeMessage < nextMessages.Length && isDone == true)
         {
             DisplayMessage2();
-        } else if (activeMessage < currentMessages.Length && nextMessages.Length == 0 && isDone == true)
+			isDisplayMessage = true;
+		} else if (activeMessage < currentMessages.Length && nextMessages.Length == 0 && isDone == true)
 		{
             DisplayMessage();
-        } else
+			isDisplayMessage = true;
+		} else
 		{
             Debug.Log("Conversation ended!");
             isActive = false;
+            isDisplayMessage = false;
             animator.SetBool("IsOpen", false);
 		}
     }
