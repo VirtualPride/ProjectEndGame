@@ -78,14 +78,6 @@ public class RuanganTestController : MonoBehaviour, IRuangan
         }
 
         // Check jika tidak ada pemain di ruangan, hidupkan kamera utama
-        if (!player1InRoom)
-        {
-            cameraManager.player1MainCamera.enabled = true;
-        }
-        else if (!player2InRoom)
-        {
-            cameraManager.player2MainCamera.enabled = true;
-        }
 
     }
 
