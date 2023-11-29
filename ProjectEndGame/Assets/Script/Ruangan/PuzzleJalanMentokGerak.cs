@@ -34,8 +34,7 @@ public class PuzzleJalanMentokGerak : MonoBehaviour
 
     private void disabledCamera()
     {
-        camera1.enabled = false;
-        camera2.enabled = false;
+
     }
 
 

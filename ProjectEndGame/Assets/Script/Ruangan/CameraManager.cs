@@ -27,8 +27,8 @@ public class CameraManager : MonoBehaviour
 
     private void Update()
     {
-        CheckOtherPlayer1Camera();
-        CheckOtherPlayer2Camera();
+        // CheckOtherPlayer1Camera();
+        // CheckOtherPlayer2Camera();
     }
 
     public void CheckOtherPlayer1Camera()
