@@ -37,6 +37,7 @@ public class DialogueManage : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.W))
 		{
             isDone = true;
+            Debug.Log("isDone = " + isDone);
 		}
     }
 
@@ -68,7 +69,7 @@ public class DialogueManage : MonoBehaviour
 	{
         Message messageToDisplay = currentMessages[activeMessage];
         StopAllCoroutines();
-        StartCoroutine(TypeSentence(messageToDisplay.message));
+        StartCoroutine(TypeSentence(messageToDisplay.message + "..."));
         //messageText.text = messageToDisplay.message;
 
         Actor actorToDisplay = currentActors[messageToDisplay.actorId];
@@ -93,25 +94,22 @@ public class DialogueManage : MonoBehaviour
     public void NextMessage()
 	{
         activeMessage++;
-        if (activeMessage < currentMessages.Length)
-		{
-            if (isDone == false)
-			{
-                DisplayMessage();
-            } else if (activeMessage < currentMessages.Length && nextMessages.Length == 0)
-			{
-                DisplayMessage();
-            }
-		} else if (activeMessage < nextMessages.Length && isDone == true)
+        if (isDone == false && activeMessage < currentMessages.Length)
+        {
+            DisplayMessage();
+        } else if (activeMessage < nextMessages.Length && isDone == true)
         {
             DisplayMessage2();
-		} else
+        } else if (activeMessage < currentMessages.Length && nextMessages.Length == 0 && isDone == true)
+		{
+            DisplayMessage();
+        } else
 		{
             Debug.Log("Conversation ended!");
             isActive = false;
             animator.SetBool("IsOpen", false);
 		}
-	}
+    }
 
     IEnumerator TypeSentence (string message)
     {
