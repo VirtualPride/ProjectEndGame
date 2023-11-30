@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class DialogueManage : MonoBehaviour
+public class DialogueManage2 : MonoBehaviour
 {
     public Image actorImage;
     public TextMeshProUGUI actorName;
