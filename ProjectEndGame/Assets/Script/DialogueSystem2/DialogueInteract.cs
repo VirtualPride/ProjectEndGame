@@ -2,13 +2,36 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DialogueInteract : MonoBehaviour
+public class DialogueInteract : MonoBehaviour, IInteractable
 {
     public Message[] messages;
     public Message2[] messages2;
     public Actor[] actors;
 
-    public void StartDialogue()
+	private string interactText = "Talk";
+
+	public string GetInteractText()
+	{
+		return interactText;
+	}
+
+	public Transform GetTransform()
+	{
+		throw new System.NotImplementedException();
+	}
+
+	public void Interact()
+	{
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+			FindObjectOfType<DialogueManage>().OpenDialogue(messages, messages2, actors);
+		} else if (Input.GetKeyDown(KeyCode.M))
+		{
+			FindObjectOfType<DialogueManage2>().OpenDialogue(messages, messages2, actors);
+		}
+	}
+
+	public void StartDialogue()
 	{
         FindObjectOfType<DialogueManage>().OpenDialogue(messages, messages2, actors);
 	}
