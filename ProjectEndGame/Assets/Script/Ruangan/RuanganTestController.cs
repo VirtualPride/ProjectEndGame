@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class RuanganTestController : MonoBehaviour, IRuangan
@@ -9,6 +10,7 @@ public class RuanganTestController : MonoBehaviour, IRuangan
     [SerializeField] private CameraManager cameraManager;
     [SerializeField] private Player1Controller player1Controller;
     [SerializeField] private Player2Controller player2Controller;
+    [SerializeField] private SpriteRenderer ruanganTest;
     public BoxCollider2D roomCollider;
     public Camera RuanganCamGabungan;
 
@@ -47,6 +49,7 @@ public class RuanganTestController : MonoBehaviour, IRuangan
         if (player1InRoom && player1Idle || player1InRoom && player1OpenMenu)
         {
             cameraManager.player1RuanganTestCam.enabled = true;
+            ruanganTest.color = new Color(0, 0, 0, 0);
         }
         else
         {
@@ -56,6 +59,7 @@ public class RuanganTestController : MonoBehaviour, IRuangan
         if (player2InRoom && player2Idle || player2InRoom && player2OpenMenu)
         {
             cameraManager.player2RuanganTestCam.enabled = true;
+            ruanganTest.color = new Color(0, 0, 0, 0);
         }
         else
         {
@@ -74,14 +78,6 @@ public class RuanganTestController : MonoBehaviour, IRuangan
         }
 
         // Check jika tidak ada pemain di ruangan, hidupkan kamera utama
-        if (!player1InRoom)
-        {
-            cameraManager.player1MainCamera.enabled = true;
-        }
-        else if (!player2InRoom)
-        {
-            cameraManager.player2MainCamera.enabled = true;
-        }
 
     }
 
